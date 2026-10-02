@@ -206,7 +206,7 @@
 <script>
 /* ---------- Fallback data if fetch fails (works from file:// too) ---------- */
 const FALLBACK = {
-  "title": "Verbal Ability — Exam Cram",
+  "title": "Verbal + Arithmetic + Reasoning — Exam Cram",
   "sections": [
     {
       "id": "reported-speech",
@@ -636,10 +636,612 @@ const FALLBACK = {
         {"q":"PASSAGE continued: Why are salaries for skilled workers rising?","options":["Companies are paying higher to lure skilled people","American companies are ready to pay higher to skilled workers","Entrepreneurship is growing in India","There is not enough skilled workers while the demand for them is high"],"answer":3,"explanation":"The passage says demand for skilled labour is outstripping supply."},
         {"q":"PASSAGE continued: What is the paradox of the Indian economy today?","options":["The economic progress is impressive, but the poor are not benefited","The economic progress is impressive, disallowing the government to take tough decisions","There is not enough skilled workforce and the government does not realize this","Government is not ready to invest in setting up new universities"],"answer":1,"explanation":"The passage says the more certain the glowing future seems, the less likely that future becomes because the government defers difficult choices."}
       ]
+    },
+    {
+      "id": "number-system",
+      "title": "Number System",
+      "icon": "🔢",
+      "description": "Questions about divisibility, fractions, remainders, factors, unit digits and number of zeros.",
+      "rules": [
+        "To compare fractions, convert them to decimals or cross-multiply. For example, 3/5 and 2/3: cross-multiply 3×3 = 9 and 2×5 = 10, so 2/3 is bigger.",
+        "A number is divisible by 9 if the sum of its digits is divisible by 9. For example, 5432*7: 5+4+3+2+*+7 = 21+*, so * must be 6.",
+        "A number is divisible by 11 if the difference of alternating digit sums is 0 or a multiple of 11. For example, 78*3945: (7+*+9+5) - (8+3+4) = 6+*, so * = 5.",
+        "Any 4-digit number of form ABAB = AB × 101. Any 6-digit number of form ABCABC = ABC × 1001.",
+        "If a number leaves remainder R when divided by D, then when divided by any factor of D, the remainder is R mod (that factor).",
+        "Number of zeros at the end of a product = number of pairs of 2s and 5s in the prime factorisation.",
+        "Number of zeros in N! = floor(N/5) + floor(N/25) + floor(N/125) + ..."
+      ],
+      "cheatCodes": [
+        "Always count 2s and 5s separately for zeros. The smaller count wins.",
+        "Unit digit cycles: 2→2,4,8,6; 3→3,9,7,1; 4→4,6; 7→7,9,3,1; 8→8,4,2,6; 9→9,1.",
+        "Sum of divisors of N = (a^(p+1)-1)/(a-1) × (b^(q+1)-1)/(b-1) × ... for N = a^p × b^q × ...",
+        "Number of divisors = (p+1)(q+1)(r+1)... for N = a^p × b^q × c^r..."
+      ],
+      "questions": [
+        {"q":"Which fraction is smallest: 9/13, 17/26, 28/29, 33/52?","options":["33/52","17/26","9/13","28/29"],"answer":0,"explanation":"33/52 ≈ 0.635, 17/26 ≈ 0.654, 9/13 ≈ 0.692, 28/29 ≈ 0.966. Smallest is 33/52."},
+        {"q":"Which fraction is biggest: 8/25, 7/23, 11/23, 14/53?","options":["8/25","7/23","11/23","14/53"],"answer":2,"explanation":"11/23 ≈ 0.478, others smaller."},
+        {"q":"If 5432*7 is divisible by 9, the digit * is:","options":["0","1","6","9"],"answer":2,"explanation":"5+4+3+2+*+7 = 21+*. Divisible by 9 → * = 6."},
+        {"q":"If 78*3945 is divisible by 11, * is:","options":["1","0","3","5"],"answer":3,"explanation":"(7+*+9+5)-(8+3+4)=6+*. Need 6+* = 11 → * = 5."},
+        {"q":"A 4-digit number like 2525 is always divisible by:","options":["7","11","13","101"],"answer":3,"explanation":"ABAB = AB × 101, so divisible by 101 (smallest 3-digit prime)."},
+        {"q":"A 6-digit number like 256256 is always divisible by:","options":["7 only","11 only","13 only","1001"],"answer":3,"explanation":"ABCABC = ABC × 1001."},
+        {"q":"If 335 + 5A7 = 8B2 and 8B2 is divisible by 3, largest A is:","options":["8","2","1","4"],"answer":3,"explanation":"842+10A = 802+10B → B = A+4. 10+B divisible by 3 → B ∈ {2,5,8}. Largest A = 4."},
+        {"q":"(3^25 + 3^26 + 3^27 + 3^28) is divisible by:","options":["11","16","25","30"],"answer":3,"explanation":"= 3^25 × 40 = 3^25 × 2^3 × 5. Divisible by 30."},
+        {"q":"If divisor = 25 × quotient = 5 × remainder, quotient = 16, dividend = ?","options":["6400","6480","400","480"],"answer":1,"explanation":"Divisor = 400. Remainder = 80. Dividend = 400×16+80 = 6480."},
+        {"q":"Number of divisors of 180?","options":["16","20","18","14"],"answer":2,"explanation":"180 = 2²×3²×5. (2+1)(2+1)(1+1) = 18."},
+        {"q":"Sum of divisors of 120?","options":["360","60","240","420"],"answer":0,"explanation":"120 = 2³×3×5. Sum = 15×4×6 = 360."},
+        {"q":"Sum of divisors of 100?","options":["175","217","240","420"],"answer":1,"explanation":"100 = 2²×5². Sum = 7×31 = 217."},
+        {"q":"Unit digit of (573)^678?","options":["9","3","6","1"],"answer":0,"explanation":"3-cycle: 3,9,7,1. 678 mod 4 = 2 → 9."},
+        {"q":"Unit digit of (251)^98 + (21)^29 - (106)^100 + (705)^35 - 164 + 259?","options":["1","4","5","6"],"answer":3,"explanation":"Unit digits: 1+1-6+5-4+9 = 6."},
+        {"q":"Unit digit of 25^6251 + 36^528 + 73^54?","options":["6","5","4","0"],"answer":3,"explanation":"5+6+9 = 20 → 0."},
+        {"q":"Number of zeros in 15×25×16×9×12×75×55?","options":["3","4","6","5"],"answer":2,"explanation":"Number of 2s = 4+2 = 6. Number of 5s = 1+2+2+1 = 6. Zeros = 6."},
+        {"q":"Number of zeros in 60!?","options":["12","14","10","16"],"answer":1,"explanation":"60/5 + 60/25 = 12+2 = 14."},
+        {"q":"Numbers between 100 and 200 divisible by both 9 and 6?","options":["5","6","7","8"],"answer":1,"explanation":"LCM = 18. Multiples: 108,126,144,162,180,198 = 6."},
+        {"q":"Remainder when 17^200 is divided by 18?","options":["17","16","1","2"],"answer":2,"explanation":"17 ≡ -1 (mod 18). (-1)^200 = 1."},
+        {"q":"Remainder when 3^21 is divided by 5?","options":["1","2","3","4"],"answer":2,"explanation":"3^4 ≡ 1. 3^21 = 3^(20+1) ≡ 3."},
+        {"q":"A number ÷ 49 leaves 32. Remainder when ÷ 7?","options":["4","3","2","5"],"answer":0,"explanation":"49 = 7². 32 mod 7 = 4."},
+        {"q":"Two numbers ÷ 33 leave remainders 21 and 28. Sum ÷ 33 remainder?","options":["10","12","14","16"],"answer":3,"explanation":"(21+28) mod 33 = 16."},
+        {"q":"Largest 4-digit number divisible by 23?","options":["9999","9982","9990","9960"],"answer":1,"explanation":"9999/23 = 434.7, 434×23 = 9982."},
+        {"q":"Least 4-digit number divisible by 37?","options":["1037","1023","1042","1036"],"answer":3,"explanation":"1000/37 = 27.03, 28×37 = 1036."},
+        {"q":"Weight of empty bucket if full = 17 kg, half = 13.5 kg?","options":["12 kg","8 kg","10 kg","7 kg"],"answer":2,"explanation":"Half-water = 3.5 kg → full water = 7 kg → bucket = 10 kg."},
+        {"q":"In a farm, heads 180, legs 420. Number of cows?","options":["130","150","50","30"],"answer":3,"explanation":"C+H=180, 4C+2H=420 → 2C=60 → C=30."},
+        {"q":"A tin is 4/5 full. Remove 6, add 4 → 3/4 full. Capacity?","options":["10","20","30","40"],"answer":3,"explanation":"C/20 = 2 → C = 40."},
+        {"q":"Tree 64 cm, grows 1/8 per year. Height after 2 years?","options":["72 cm","74 cm","75 cm","81 cm"],"answer":3,"explanation":"64 → 72 → 81 cm."},
+        {"q":"A/B/C/D buy gift of Rs.60. A pays 1/2 of others, B 1/3, C 1/4. D pays?","options":["16","13","14","15"],"answer":1,"explanation":"A=20, B=15, C=12 → D = 13."}
+      ]
+    },
+    {
+      "id": "lcm-hcf",
+      "title": "LCM & HCF",
+      "icon": "🔗",
+      "description": "LCM is the smallest common multiple. HCF is the largest common factor.",
+      "rules": [
+        "To find the least number that leaves the same remainder R when divided by a,b,c: LCM(a,b,c) + R.",
+        "If the difference between divisor and remainder is the same D: LCM(a,b,c) - D.",
+        "HCF of fractions = HCF of numerators / LCM of denominators.",
+        "LCM of fractions = LCM of numerators / HCF of denominators.",
+        "Product of two numbers = LCM × HCF.",
+        "For tiling problems, tile side = HCF of dimensions; number of tiles = area / tile²."
+      ],
+      "cheatCodes": [
+        "Look for the pattern in remainders. If each remainder is 3 less than its divisor, subtract 3 from LCM.",
+        "For 'same remainder' problems, add the remainder to LCM.",
+        "For two numbers, product = LCM × HCF. Use this to find the missing number."
+      ],
+      "questions": [
+        {"q":"LCM of (4, 12, 16)?","options":["144","96","24","48"],"answer":3,"explanation":"LCM = 48."},
+        {"q":"Least number divisible by 5, 10, 15, 20?","options":["120","60","40","180"],"answer":1,"explanation":"LCM = 60."},
+        {"q":"Least number, ÷ 5,10,15,20 leaves remainder 3 each time?","options":["183","123","63","43"],"answer":2,"explanation":"LCM=60, +3 = 63."},
+        {"q":"Least number, ÷ 5,10,15,20 leaves remainder 3,8,13,18?","options":["58","62","48","72"],"answer":0,"explanation":"Each remainder is 2 less than divisor. LCM=60, -2 = 58."},
+        {"q":"Least number, ÷ 10,15,20,25 leaves 7,12,17,22?","options":["267","297","303","324"],"answer":1,"explanation":"Each remainder is 3 less. LCM=300, -3 = 297."},
+        {"q":"Least number, ÷ 5,10,15,20 leaves 2 but ÷ 7 leaves 0?","options":["242","62","182","122"],"answer":2,"explanation":"60k+2 divisible by 7 → k=3 → 182."},
+        {"q":"Largest 4-digit, ÷ 5,10,15,20 leaves 3,8,13,18?","options":["9972","9957","9962","9958"],"answer":3,"explanation":"60k-2. 9999/60 → k=166 → 9958."},
+        {"q":"HCF of (160, 180, 200)?","options":["10","20","40","60"],"answer":1,"explanation":"HCF = 20."},
+        {"q":"HCF of (60, 84, 96)?","options":["6","4","10","12"],"answer":3,"explanation":"HCF = 12."},
+        {"q":"Largest number dividing 93, 108, 123 leaves 3 each?","options":["15","12","14","20"],"answer":0,"explanation":"HCF(90,105,120) = 15."},
+        {"q":"Among how many students will 111 bananas and 148 oranges be equally distributed?","options":["47","37","29","43"],"answer":1,"explanation":"HCF(111,148) = 37."},
+        {"q":"LCM of (1/2, 2/3, 3/4)?","options":["12","1/6","6","None"],"answer":2,"explanation":"LCM(1,2,3)/HCF(2,3,4) = 6/1 = 6."},
+        {"q":"HCF of (1/2, 2/3, 3/4)?","options":["12","1/6","1/12","6"],"answer":2,"explanation":"HCF(1,2,3)/LCM(2,3,4) = 1/12."},
+        {"q":"LCM=480, HCF=40, one number=120. Other number?","options":["160","180","80","100"],"answer":0,"explanation":"(480×40)/120 = 160."},
+        {"q":"LCM=120, product=2400, HCF=?","options":["40","20","10","60"],"answer":1,"explanation":"HCF = 2400/120 = 20."},
+        {"q":"LCM = 7×HCF. LCM+HCF = 400. One number = 50. Other?","options":["350","200","100","700"],"answer":0,"explanation":"8×HCF=400 → HCF=50, LCM=350. Other=350."}
+      ]
+    },
+    {
+      "id": "ratio-proportion",
+      "title": "Ratio & Proportions",
+      "icon": "⚖️",
+      "description": "Ratio compares two quantities. Proportion says two ratios are equal.",
+      "rules": [
+        "To combine A:B and B:C, make B the same. If A:B = 3:7 and B:C = 6:5, make B = 42. Then A:B:C = 18:42:35.",
+        "If fractions are given like 1/2 : 2/3 : 4/5, multiply by LCM of denominators.",
+        "Income - Expenditure = Savings. Set up equations with ratio variables.",
+        "If two numbers are a:b and after adding k they become c:d, use (ax+k)/(bx+k) = c/d.",
+        "Mixture problems: if ratio of A:B is p:q and total is T, A = pT/(p+q)."
+      ],
+      "cheatCodes": [
+        "For 'addition to both numbers' problems, set up as (ax+k)/(bx+k) and solve for x.",
+        "For income/expense/savings, always write Income - Expense = Savings.",
+        "For three-way ratios, find a common term to link."
+      ],
+      "questions": [
+        {"q":"Rs.33,630 divided A:B=3:7 and B:C=6:5. B's share?","options":["14868","16257","13290","12390"],"answer":0,"explanation":"A:B:C = 18:42:35. B = 42/95 × 33630 = 14868."},
+        {"q":"A:B = 5:3, B:C = 4:5, total = 564. B's runs?","options":["124","104","114","144"],"answer":3,"explanation":"A:B:C = 20:12:15. B = 12/47 × 564 = 144."},
+        {"q":"177 divided in 1/2 : 2/3 : 4/5. Second part?","options":["75","45","72","60"],"answer":3,"explanation":"Multiply by 30 → 15:20:24. Second = 20/59 × 177 = 60."},
+        {"q":"Income 5:3, expense 3:1, each saves 1000. B's expense?","options":["2000","1500","500","1000"],"answer":2,"explanation":"5x-3y=1000, 3x-y=1000 → x=500, y=500."},
+        {"q":"Income 5:3, expense 9:5, save 1300 and 900. Incomes?","options":["4000,2400","3000,1800","5000,3000","4500,2700"],"answer":0,"explanation":"x=800 → 4000, 2400."},
+        {"q":"Two numbers 2:3, +8 → 3:4. Sum?","options":["10","80","40","100"],"answer":2,"explanation":"(2x+8)/(3x+8)=3/4 → x=8. Numbers 16, 24. Sum=40."},
+        {"q":"Two numbers 3:5, -9 → 12:23. Smaller?","options":["27","33","49","55"],"answer":1,"explanation":"x=11 → 33, 55."},
+        {"q":"Classes 2:3:5, +20 each → 4:5:7. Total originally?","options":["50","90","100","150"],"answer":2,"explanation":"x=10 → 20+30+50 = 100."},
+        {"q":"Zinc:Copper = 5:3 in 200g. Copper to add for 3:5?","options":["133 1/3","1/200","72","66"],"answer":0,"explanation":"125/(75+x)=3/5 → x = 133 1/3 g."},
+        {"q":"30L acid:water = 2:3. Water to add for 2:5?","options":["10","15","18","12"],"answer":3,"explanation":"12/(18+x)=2/5 → x = 12 L."}
+      ]
+    },
+    {
+      "id": "partnership",
+      "title": "Partnership",
+      "icon": "🤝",
+      "description": "In partnership, profit is divided in the ratio of capital × time.",
+      "rules": [
+        "Profit ratio = (Capital × Time) ratio for each partner.",
+        "If capitals are equal, profit ratio = time ratio.",
+        "If time is equal, profit ratio = capital ratio.",
+        "If A leaves early, use A's actual time and B's full time."
+      ],
+      "cheatCodes": [
+        "Always multiply capital by time. Even if capitals are equal, time matters.",
+        "When A leaves after k months, A's time = k, B's time = 12."
+      ],
+      "questions": [
+        {"q":"A and B invest Rs.20000 each. Profit Rs.60000. A's share?","options":["30000","40000","15000","20000"],"answer":0,"explanation":"Equal investment → equal profit. 30000 each."},
+        {"q":"A and B invest Rs.40000 each. After 8 months A leaves. Profit Rs.50000. Difference?","options":["20000","10000","30000","5000"],"answer":1,"explanation":"Ratio = 8:12 = 2:3. A=20000, B=30000. Difference=10000."},
+        {"q":"A: 20000, B: 25000. Profit 54000. A's share?","options":["24000","20000","30000","36000"],"answer":0,"explanation":"Ratio 4:5. A = 4/9 × 54000 = 24000."},
+        {"q":"A: 40000, B: 45000. A leaves after 8 months. Profit 86000. Difference?","options":["24000","20000","11000","22000"],"answer":3,"explanation":"Ratio = 320000:540000 = 16:27. A=32000, B=54000. Diff = 22000."},
+        {"q":"A starts with 20000. B joins after 4 months with 25000. A's share = 30000. Total profit?","options":["55000","22000","33000","44000"],"answer":0,"explanation":"Ratio = 240000:200000 = 6:5. Total = 30000 × 11/6 = 55000."}
+      ]
+    },
+    {
+      "id": "ages",
+      "title": "Ages",
+      "icon": "👴",
+      "description": "Age problems are ratio problems with past/future adjustments.",
+      "rules": [
+        "Present age ratio a:b. After k years, ratio = (ax+k):(bx+k).",
+        "Before k years, ratio = (ax-k):(bx-k).",
+        "If sum and ratio are given, use S/(a+b) × a for the first person.",
+        "Age difference never changes over time."
+      ],
+      "cheatCodes": [
+        "Set variables x for common ratio, then use the 'k years later' condition to solve.",
+        "Age difference is constant — use this to cross-check.",
+        "If father is x times son, and after k years y times, use F=k×S and F+k = y(S+k)."
+      ],
+      "questions": [
+        {"q":"Man is 5× son. 5 years ago, 10× son. Man's age?","options":["45","48","49","None"],"answer":0,"explanation":"5S-5 = 10(S-5) → S=9. Man=45."},
+        {"q":"Ajay:Vijay = 3:4. After 5 years = 4:5. Vijay's age?","options":["15","18","20","24"],"answer":2,"explanation":"x=5 → Vijay = 20."},
+        {"q":"Samir:Tanuj = 8:15. After 9 years = 11:18. Difference?","options":["20","21","24","33"],"answer":1,"explanation":"x=3. Ages 24, 45. Difference=21."},
+        {"q":"Two persons 5:7. 16 years ago 3:5. Ages?","options":["30,44","35,52","40,56","45,60"],"answer":2,"explanation":"x=8 → 40, 56."},
+        {"q":"Father+Son=100. 5 years ago ratio 2:1. After 10 years ratio?","options":["4:3","5:3","3:5","10:7"],"answer":1,"explanation":"S=35, F=65. After 10: 75:45 = 5:3."},
+        {"q":"A:B:C = 10:11:12. 5 years ago sum = 150. Ages?","options":["20,22,24","30,33,36","40,44,48","50,55,60"],"answer":3,"explanation":"x=5. Ages 50, 55, 60."},
+        {"q":"Laxmi:Mother = 3:11. Difference = 24. After 3 years ratio?","options":["1:3","2:3","3:5","2:5"],"answer":0,"explanation":"Laxmi=9, Mother=33. After 3: 12:36 = 1:3."},
+        {"q":"15 years hence = 4 × 15 years ago. Present age?","options":["10","15","20","25"],"answer":3,"explanation":"x+15 = 4(x-15) → x=25."},
+        {"q":"Rajeev's age after 15 = 5 × age 5 back. Age?","options":["5","10","15","50"],"answer":1,"explanation":"x+15 = 5(x-5) → x=10."}
+      ]
+    },
+    {
+      "id": "averages",
+      "title": "Averages",
+      "icon": "📊",
+      "description": "Average = Sum / Count. Problems involve adding, removing, or replacing items.",
+      "rules": [
+        "Average = Sum of items / Number of items.",
+        "When a new item is added, new average = (old sum + new item) / (old count + 1).",
+        "When an item is replaced, change in sum = change in average × total count.",
+        "Average of first n natural numbers = (n+1)/2.",
+        "If each item is increased by k, average increases by k. If multiplied by k, average is multiplied by k."
+      ],
+      "cheatCodes": [
+        "To find a new person's weight/age when replacing: New person's value = Old value + (change in avg) × total count.",
+        "For 'decreased by k months' problems, convert everything to the same unit (months)."
+      ],
+      "questions": [
+        {"q":"20 boys avg 12. 5 new boys avg 7. New avg?","options":["11.5","11","10.5","10"],"answer":1,"explanation":"Total = 240+35=275. Avg = 275/25 = 11."},
+        {"q":"6 students avg 50, 2 avg 51, 2 avg 55. Overall avg?","options":["61","51.5","52","51.2"],"answer":3,"explanation":"Total = 512. Avg = 51.2."},
+        {"q":"Avg of 99 items 27. Add 3 to each. New avg?","options":["24","27","30","33"],"answer":2,"explanation":"New avg = 27+3 = 30."},
+        {"q":"Avg of 18 numbers 24. Multiply each by 3. New avg?","options":["8","24","27","72"],"answer":3,"explanation":"New avg = 24×3 = 72."},
+        {"q":"Avg of first 47 natural numbers?","options":["23","24","25","47"],"answer":1,"explanation":"(1+47)/2 = 24."},
+        {"q":"40 students avg 15. Include teacher avg 16. Teacher's age?","options":["15","16","55","56"],"answer":3,"explanation":"600+T = 656 → T = 56."},
+        {"q":"24 students avg 35 kg. Include teacher avg +400g. Teacher's weight?","options":["50","55","45","53"],"answer":2,"explanation":"24×35+T = 25×35.4 → T = 45 kg."},
+        {"q":"Avg 12 persons 25. +3 persons, avg decreases by 1. Avg of new 3?","options":["19","20","23","24"],"answer":1,"explanation":"300+3x = 360 → x = 20."},
+        {"q":"Avg of 25 = 18. First 12 avg 14, last 12 avg 17. 13th?","options":["28","72","78","85"],"answer":2,"explanation":"450-168-204 = 78."},
+        {"q":"Avg of 11 = 72. First 5 avg 70, last 5 avg 71. 6th?","options":["72","75","82","87"],"answer":3,"explanation":"792-350-355 = 87."},
+        {"q":"Avg of 20 numbers 12. First 12 avg 11, next 7 avg 10. Last number?","options":["40","38","48","50"],"answer":1,"explanation":"240-132-70 = 38."},
+        {"q":"Mean of 10 numbers = 7.6. 8 read as 3. Corrected mean?","options":["7.1","7.6","8.1","8.6"],"answer":2,"explanation":"Add 5/10 = 0.5 → 8.1."},
+        {"q":"Mean of 50 = 36. 48 read as 23. Corrected mean?","options":["35.2","36.1","36.5","39.1"],"answer":2,"explanation":"Add 25/50 = 0.5 → 36.5."}
+      ]
+    },
+    {
+      "id": "percentages",
+      "title": "Percentages",
+      "icon": "％",
+      "description": "Percentage means 'out of 100'. 20% = 20/100 = 0.2.",
+      "rules": [
+        "If price increases by r%, reduce consumption by r/(100+r) × 100 to keep expenditure constant.",
+        "If price decreases by r%, increase consumption by r/(100-r) × 100.",
+        "Successive changes of a% and b%: net = a+b+ab/100.",
+        "x% of y = (x/100) × y.",
+        "If A is x% more than B, then B is x/(100+x) × 100 % less than A."
+      ],
+      "cheatCodes": [
+        "For 'price rise and consumption reduction' problems, use the formula r/(100+r) × 100.",
+        "For successive percentage changes, use a+b+ab/100. Decrease = negative value.",
+        "For 'A is what % of B', divide A/B and multiply by 100."
+      ],
+      "questions": [
+        {"q":"Laptops 210000 at 10% duty, Phones 100000 at 8%, TV 150000 at 5%. Total duty?","options":["36500","37000","37250","37500"],"answer":0,"explanation":"21000+8000+7500 = 36500."},
+        {"q":"70% boys, girls = 504. Number of boys?","options":["1176","1008","1208","3024"],"answer":0,"explanation":"30% = 504, total = 1680, boys = 1176."},
+        {"q":"20% of 30% of 40% of a number = 24. 50% of that number?","options":["600","500","400","800"],"answer":1,"explanation":"0.024N = 24 → N = 1000. 50% = 500."},
+        {"q":"40 is what % more than 20?","options":["40%","50%","100%","20%"],"answer":2,"explanation":"(40-20)/20 × 100 = 100%."},
+        {"q":"Price up 25%. Reduce consumption by?","options":["20%","25%","50%","40%"],"answer":0,"explanation":"25/125 × 100 = 20%."},
+        {"q":"Length +30%. Reduce breadth by?","options":["20%","23 1/13%","25%","30%"],"answer":1,"explanation":"30/130 × 100 = 23 1/13%."},
+        {"q":"Cost decreases by 25%. Increase usage by?","options":["30%","33 1/3%","25%","20%"],"answer":1,"explanation":"25/75 × 100 = 33 1/3%."},
+        {"q":"Oil 30→33. Reduction in consumption?","options":["10%","11 1/9%","9 1/11%","3%"],"answer":2,"explanation":"Increase 10%. Reduction = 10/110 × 100 = 9 1/11%."},
+        {"q":"Reduction 25%, 6 kg more for Rs.120. Reduced price?","options":["4","6","5","3"],"answer":2,"explanation":"120/0.75r - 120/r = 6 → r = 20/3, reduced = 5."},
+        {"q":"First +20% then -20%. Net?","options":["4% decrease","4% increase","No change","None"],"answer":0,"explanation":"1.2 × 0.8 = 0.96 → 4% decrease."},
+        {"q":"Price -20%, sale +80%. Net effect?","options":["44% increase","44% decrease","66% increase","75% increase"],"answer":0,"explanation":"0.8 × 1.8 = 1.44 → 44% increase."},
+        {"q":"Length +20%, breadth -10%. Area change?","options":["8% decrease","8% increase","10% decrease","10% increase"],"answer":1,"explanation":"1.2 × 0.9 = 1.08 → 8% increase."},
+        {"q":"Seats +25%, ticket +10%. Revenue change?","options":["37.5%","45.5%","47.5%","49.5%"],"answer":0,"explanation":"1.25 × 1.10 = 1.375 → 37.5%."},
+        {"q":"4000 admissions + 10% for 2 years. New?","options":["5260","4480","6290","4840"],"answer":3,"explanation":"4000 × 1.21 = 4840."},
+        {"q":"Gets 40%, fails with 40 marks. Pass marks 400. Max marks?","options":["1000","600","500","900"],"answer":3,"explanation":"40% of M = 360 → M = 900."},
+        {"q":"Spends 30+10+5+10=55%. Left with 9000. Total income?","options":["15000","10000","20000","16000"],"answer":2,"explanation":"45% = 9000 → total = 20000."},
+        {"q":"Gave 20% to elder, 30% of remaining to younger, 10% to trust. Left 10080. Income?","options":["50000","40000","30000","20000"],"answer":3,"explanation":"0.504x = 10080 → x = 20000."}
+      ]
+    },
+    {
+      "id": "profit-loss",
+      "title": "Profit & Loss",
+      "icon": "💰",
+      "description": "Profit = SP - CP. Loss = CP - SP. Profit% = (Profit/CP) × 100.",
+      "rules": [
+        "Profit% = (SP - CP)/CP × 100. Loss% = (CP - SP)/CP × 100.",
+        "If an item is sold at a loss/gain on SP, convert to CP basis.",
+        "If two articles sold at same SP, one +x% and one -x%, there is always a loss of x²/100 %.",
+        "Dishonest shopkeeper: gain% = (Error)/(True value - Error) × 100.",
+        "CP of x articles = SP of y articles → Profit% = (x-y)/y × 100."
+      ],
+      "cheatCodes": [
+        "For two sold at same SP, ±x%: net loss = x²/100 %.",
+        "For 'CP of x = SP of y': profit% = (x-y)/y × 100.",
+        "For 'gain on SP' problems, use SP = CP × 100/(100-gain%)."
+      ],
+      "questions": [
+        {"q":"CP 1400, loss 15%. SP?","options":["1202","1190","1160","1000"],"answer":1,"explanation":"1400 × 0.85 = 1190."},
+        {"q":"SP 572, gain 30%. CP?","options":["340","400","440","None"],"answer":2,"explanation":"572/1.3 = 440."},
+        {"q":"Bought 20% less than original, sold 40% profit on paid. Profit% on original?","options":["22%","32%","12%","15%"],"answer":2,"explanation":"1.4 × 0.8 = 1.12 → 12%."},
+        {"q":"Typewriter 1200 + 200 repair, sold 1680. Profit%?","options":["20%","10%","8%","16%"],"answer":0,"explanation":"Profit = 280, CP = 1400. 280/1400 × 100 = 20%."},
+        {"q":"Sell 720 → loss 25%. Sell for 25% gain?","options":["1200","1000","960","900"],"answer":0,"explanation":"CP = 960, × 1.25 = 1200."},
+        {"q":"SP 450, loss 20%. Gain 20% SP?","options":["490","675","470","562.50"],"answer":1,"explanation":"CP = 562.50, × 1.2 = 675."},
+        {"q":"Two pipes at 12 each. One +20%, other -20%. Net?","options":["Neither","gain Rs.1","lost Rs.1","gain Rs.2"],"answer":2,"explanation":"Net loss = 20²/100 = 4% of CP. CP = 25, SP = 24. Loss = Rs.1."},
+        {"q":"CP of 36 books = SP of 30 books. Gain%?","options":["20%","16 4/6%","18%","82 2/6%"],"answer":0,"explanation":"36c = 30s → s/c = 6/5 → 20% profit."},
+        {"q":"CP of 15 = SP of 10. Profit%?","options":["30%","40%","50%","45%"],"answer":2,"explanation":"15c = 10s → s/c = 1.5 → 50%."},
+        {"q":"Eggs at 3 for 5, sold at 5 for 12. Profit Rs.143. Number of eggs?","options":["210","200","195","190"],"answer":2,"explanation":"Profit/egg = 11/15. N = 143 × 15/11 = 195."},
+        {"q":"Gains 20% while buying, 30% while selling. Total gain?","options":["50%","36%","56%","40%"],"answer":2,"explanation":"1.2 × 1.3 = 1.56 → 56%."},
+        {"q":"Profit on 524 = Loss on 452. CP?","options":["480","500","488","485"],"answer":2,"explanation":"524-CP = CP-452 → CP = 488."},
+        {"q":"A sells to B at +20%, B to C at +25%. C pays 225. CP for A?","options":["110","125","120","150"],"answer":3,"explanation":"225/1.25 = 180; 180/1.2 = 150."}
+      ]
+    },
+    {
+      "id": "simple-interest",
+      "title": "Simple Interest",
+      "icon": "🏦",
+      "description": "SI = P × R × T / 100.",
+      "rules": [
+        "SI = PRT/100 where P = principal, R = rate, T = time in years.",
+        "Amount A = P + SI = P(1 + RT/100).",
+        "If a sum triples in T years, SI = 2P.",
+        "If a sum becomes n times in T years, rate R = (n-1) × 100 / T.",
+        "For different rates in different periods, SI = P(R1T1 + R2T2 + R3T3)/100."
+      ],
+      "cheatCodes": [
+        "Rate = SI × 100 / (P × T). Time = SI × 100 / (P × R).",
+        "If sum doubles in T years, R = 100/T. If triples, R = 200/T.",
+        "For installment problems, use the formula with decreasing principal."
+      ],
+      "questions": [
+        {"q":"SI on Rs.5000 at 10% for 4 years?","options":["1500","2000","2500","5000"],"answer":1,"explanation":"5000×10×4/100 = 2000."},
+        {"q":"SI on Rs.2000 at 5% for 2.5 years?","options":["200","250","300","5000"],"answer":1,"explanation":"2000×5×2.5/100 = 250."},
+        {"q":"SI = 80, R = 4%, T = 4 years. Sum?","options":["320","400","500","600"],"answer":2,"explanation":"P = 80×100/(4×4) = 500."},
+        {"q":"P = 2000, SI = 1000, T = 5. Rate?","options":["4%","5%","10%","12.5%"],"answer":2,"explanation":"R = 1000×100/(2000×5) = 10%."},
+        {"q":"5000 to 6500 at 10% p.a. Time?","options":["2","2.5","3","3.5"],"answer":2,"explanation":"SI = 1500. T = 1500×100/(5000×10) = 3 years."},
+        {"q":"A sum triples in 20 years. Time to double?","options":["8","10","12","14"],"answer":1,"explanation":"SI = 2P in 20 years → R = 10%. Double → T = 10 years."},
+        {"q":"Sum trebles in 15 years. Time to become 5 times?","options":["40","36","30","25"],"answer":2,"explanation":"SI = 2P in 15 years → R = 13.33%. 5× → SI = 4P → T = 30."},
+        {"q":"SI at 5% for 3 and 4 years differ by 42. Sum?","options":["210","280","750","840"],"answer":3,"explanation":"P×0.05×1 = 42 → P = 840."},
+        {"q":"Sum becomes 7/6 of itself in 3 years. Rate?","options":["5 5/9%","6 5/9%","18%","25%"],"answer":0,"explanation":"SI = P/6 in 3 years → R = 100/18 = 5 5/9%."}
+      ]
+    },
+    {
+      "id": "compound-interest",
+      "title": "Compound Interest",
+      "icon": "📈",
+      "description": "CI compounds every period. A = P(1 + R/100)^T.",
+      "rules": [
+        "A = P(1 + R/100)^T. CI = A - P.",
+        "If compounded half-yearly, R → R/2, T → 2T. Quarterly: R → R/4, T → 4T.",
+        "CI - SI for 2 years = P(R/100)².",
+        "If a sum doubles in T years, it becomes 2^n times in nT years.",
+        "For different rates in different years, A = P(1+R1/100)(1+R2/100)(1+R3/100)."
+      ],
+      "cheatCodes": [
+        "If a sum doubles in T years, 4× in 2T, 8× in 3T, 16× in 4T.",
+        "Difference between CI and SI for 2 years = P(R/100)². Use this to find P quickly."
+      ],
+      "questions": [
+        {"q":"CI on Rs.12000 at 10% for 3 years?","options":["1200","3600","3972","None"],"answer":2,"explanation":"12000 × (1.331-1) = 3972."},
+        {"q":"Sum amounts to Rs.12100 in 2 years at 10% CI. Sum?","options":["12000","6000","8000","10000"],"answer":3,"explanation":"P = 12100/1.21 = 10000."},
+        {"q":"400 amounts to 441 at 5% CI. Time?","options":["1","1.5","2","2.5"],"answer":2,"explanation":"441/400 = 1.05² → 2 years."},
+        {"q":"Sum amounts to 9680 in 2 years and 10648 in 3 years. Rate?","options":["5%","10%","15%","20%"],"answer":1,"explanation":"R = (10648-9680)/9680 × 100 = 10%."},
+        {"q":"Sum doubles in 10 years. Time to become 4 times?","options":["15","20","24","40"],"answer":1,"explanation":"4 = 2² → 20 years."},
+        {"q":"Sum doubles in 4 years. Time to become 8 times?","options":["18","12","16","24"],"answer":1,"explanation":"8 = 2³ → 12 years."},
+        {"q":"Sum doubles in 6 years. Time to become 16 times?","options":["24","26","22","20"],"answer":0,"explanation":"16 = 2^4 → 24 years."},
+        {"q":"SI for 2 years = 200 at 7%. CI-SI?","options":["7","6","3.5","45"],"answer":0,"explanation":"P = 200/0.14 ≈ 1428.57. Diff = P × 0.07² = 7."},
+        {"q":"Difference CI-SI = 1.40 at 4% for 2 years. Sum?","options":["875","857","787","925"],"answer":0,"explanation":"P × 0.0016 = 1.40 → P = 875."}
+      ]
+    },
+    {
+      "id": "time-work",
+      "title": "Time & Work",
+      "icon": "🔨",
+      "description": "If A does work in x days, A's rate = 1/x per day. Together rate = sum of rates.",
+      "rules": [
+        "If A does work in x days and B in y days, together = xy/(x+y) days.",
+        "If A and B together do work in x days, B alone in y days, then A alone = xy/(y-x) days.",
+        "If A is k times as efficient as B, ratio of time = 1:k.",
+        "Wages are proportional to work done (rate × time)."
+      ],
+      "cheatCodes": [
+        "Use 1/x + 1/y = 1/together. Solve for the unknown.",
+        "For 'A is twice as efficient as B', if B takes x days, A takes x/2 days.",
+        "For alternate-day problems, work in pairs of days."
+      ],
+      "questions": [
+        {"q":"A in 20 days, B in 30. Together 3/4 work?","options":["6","12","9","15"],"answer":2,"explanation":"1/20+1/30 = 1/12. 3/4 × 12 = 9 days."},
+        {"q":"A, B, C in 20, 30, 60 days. Together?","options":["5","8","10","12"],"answer":2,"explanation":"1/20+1/30+1/60 = 1/10 → 10 days."},
+        {"q":"A+B in 20, B alone in 30. A alone?","options":["60","40","20","30"],"answer":0,"explanation":"1/20-1/30 = 1/60 → 60 days."},
+        {"q":"A+B+C in 10, A+C in 15. B alone?","options":["6","40","30","60"],"answer":2,"explanation":"1/10-1/15 = 1/30 → 30 days."},
+        {"q":"A 10 days, B 15 days. A leaves after 2 days. Remaining in?","options":["6","10","12","14"],"answer":3,"explanation":"2 days work = 1/10+1/15 × 2 = 1/3. Remaining 2/3 at 1/15 rate = 10 days."},
+        {"q":"A and B together in 20 days, B and C in 30, C and A in 60. All three together?","options":["10","50","30","20"],"answer":3,"explanation":"Sum rates = 1/20+1/30+1/60 = 1/10. Together = 1/20 → 20 days."}
+      ]
+    },
+    {
+      "id": "time-distance",
+      "title": "Time & Distance",
+      "icon": "🚗",
+      "description": "Speed = Distance / Time. 1 km/hr = 5/18 m/s.",
+      "rules": [
+        "Speed = Distance/Time. Distance = Speed × Time.",
+        "To convert km/hr to m/s: multiply by 5/18.",
+        "For a train crossing a pole: Distance = Length of train.",
+        "For a train crossing a bridge: Distance = Train + Bridge length.",
+        "For two trains in opposite direction: Relative speed = sum of speeds.",
+        "For two trains same direction: Relative speed = difference of speeds."
+      ],
+      "cheatCodes": [
+        "Always convert to the same unit. km/hr and m/s need conversion.",
+        "Train crossing pole/bridge: distance = length of train (or train + bridge).",
+        "Relative speed: opposite → add; same direction → subtract."
+      ],
+      "questions": [
+        {"q":"Train at 90 km/hr travels in 20 sec?","options":["10 m","250 m","500 m","400 m"],"answer":2,"explanation":"90 × 5/18 = 25 m/s. 25 × 20 = 500 m."},
+        {"q":"500 m train at 72 km/hr crossing pole?","options":["20","25","30","40"],"answer":1,"explanation":"20 m/s. 500/20 = 25 sec."},
+        {"q":"1 km train at 40 m/s crossing telegraph pole?","options":["25","20","30","40"],"answer":0,"explanation":"1000/40 = 25 sec."},
+        {"q":"600 m train at 40 m/s, bridge 400 m. Time?","options":["15","30","20","25"],"answer":3,"explanation":"1000/40 = 25 sec."},
+        {"q":"Two trains 600m and 400m at 40 and 60 m/s opposite. Cross?","options":["15","12","10","8"],"answer":2,"explanation":"1000/100 = 10 sec."},
+        {"q":"Same direction, 700m and 400m at 60 and 80 m/s. Cross?","options":["55","50","76/7","None"],"answer":0,"explanation":"1100/20 = 55 sec."},
+        {"q":"600m train at 40 m/s, man runs same direction at 10. Cross?","options":["40","30","10","20"],"answer":3,"explanation":"600/30 = 20 sec."},
+        {"q":"800m train at 60 m/s, man runs opposite at 20. Cross?","options":["15","10","20","12"],"answer":1,"explanation":"800/80 = 10 sec."}
+      ]
+    },
+    {
+      "id": "boats-streams",
+      "title": "Boats & Streams",
+      "icon": "🚣",
+      "description": "Downstream speed = Boat + Stream. Upstream = Boat - Stream.",
+      "rules": [
+        "Downstream (D) = Boat (B) + Stream (S).",
+        "Upstream (U) = B - S.",
+        "B = (D + U)/2. S = (D - U)/2.",
+        "Time = Distance / Speed."
+      ],
+      "cheatCodes": [
+        "Add D and U to get 2B. Subtract to get 2S.",
+        "For 'same distance down and up' problems, use D×T_down = U×T_up."
+      ],
+      "questions": [
+        {"q":"Boat 20, stream 5. Down and Up?","options":["25, 15","20, 25","15, 25","None"],"answer":0,"explanation":"Down = 25, Up = 15."},
+        {"q":"Boat 10, stream 3. Down and Up?","options":["12, 8","13, 8","4, 9","13, 7"],"answer":3,"explanation":"Down = 13, Up = 7."},
+        {"q":"Down 30, Up 10. Boat and stream?","options":["25, 15","20, 10","15, 10","40, 20"],"answer":1,"explanation":"B = 20, S = 10."},
+        {"q":"Down 20, Up 8. Boat and stream?","options":["12, 7","13, 8","14, 6","None"],"answer":2,"explanation":"B = 14, S = 6."},
+        {"q":"Boat 15, down 20. Up?","options":["17.5","5","12","10"],"answer":3,"explanation":"S = 5, Up = 10."},
+        {"q":"Boat 30, stream 10. Distance in 5 hours downstream?","options":["200","100","140","160"],"answer":0,"explanation":"40 × 5 = 200 km."},
+        {"q":"Boat 15, stream 5. Time for 60 km downstream?","options":["5","4","2","3"],"answer":3,"explanation":"60/20 = 3 hours."}
+      ]
+    },
+    {
+      "id": "coding-decoding",
+      "title": "Coding & Decoding",
+      "icon": "🔐",
+      "description": "A word is coded by a rule, and you must apply the same rule to another word.",
+      "rules": [
+        "Reverse coding: the word is reversed. For example, GRANDEUR → RUEDNARG.",
+        "Swap pairs: first two letters swap, next two swap. For example, FAMOUS → AFOMSU.",
+        "Alternating +1/-1: FAVOUR → EBUPTS.",
+        "Position-based: A=1, B=2, etc. Letter values may be doubled for consonants.",
+        "Reverse position: A=26, B=25, ..., Z=1."
+      ],
+      "cheatCodes": [
+        "Always check if the code is just the reverse of the word.",
+        "Check for pairs swapping: FAMOUS → AF OM SU.",
+        "Check for alternating shifts: +1, -1, +1, -1...",
+        "For numeric codes, try letter position × 2 or position from the end."
+      ],
+      "questions": [
+        {"q":"FAMOUS → AFOMSU, FINGER → IFGNRE. INVEST?","options":["NIVETS","NEIVTS","NIEVST","NIEVTS"],"answer":3,"explanation":"Pairs swap: IN→NI, VE→EV, ST→TS."},
+        {"q":"CLIENT → LCEITN, CLOSED → LCSODE. FAMILY?","options":["FAIMYL","AFIMYL","AFIMLY","AFIMILY"],"answer":2,"explanation":"Swap pairs: AF IM LY."},
+        {"q":"NARGRUED is code for GRANDEUR. SERPEVRE?","options":["PRESERVE","REVERSE","PRESERVE","None"],"answer":0,"explanation":"Reverse SERPEVRE → ERVEPRES → PRESERVE."},
+        {"q":"REFRIGERATOR → ROTAREGIRFER. NOITINUMMA?","options":["ANMOIMUTNI","AMNTOMUIIIN","AMMUNITION","NMMUNITIOA"],"answer":2,"explanation":"Reverse = AMMUNITION."},
+        {"q":"FAVOUR → EBUPTS. DANGER?","options":["CBFFDS","CBMHDS","EBFHDS","EBHHFS"],"answer":1,"explanation":"Alternating -1,+1: CBMHDS."},
+        {"q":"CHILD → 6169248, GUEST → 142153840. BOOK?","options":["2303011","41522","4151522","23011"],"answer":2,"explanation":"Consonants × 2, vowels × 1. B(4), O(15), O(15), K(22) = 4151522."},
+        {"q":"A=2, M=26, Z=52. BET?","options":["44","54","64","72"],"answer":1,"explanation":"Position × 2. B=4, E=10, T=40. Sum = 54."},
+        {"q":"A=26, SUN=27. CAT?","options":["24","27","57","58"],"answer":2,"explanation":"Reverse positions: C=24, A=26, T=7. Sum = 57."},
+        {"q":"WORK → 4-12-9-16. WOMAN?","options":["4-12-14-26-13","4-26-14-13-12","23-12-26-14-13","23-15-13-1-14"],"answer":0,"explanation":"Reverse positions: W=4, O=12, M=14, A=26, N=13."},
+        {"q":"White=blue, blue=red, red=yellow, yellow=green, green=black, black=violet, violet=orange. Color of blood?","options":["Red","Green","Yellow","Violet"],"answer":2,"explanation":"Blood is red → code for red is yellow."},
+        {"q":"Pen=table, table=fan, fan=chair, chair=roof. Sit on?","options":["Fan","Chair","Roof","Table"],"answer":2,"explanation":"Sit on chair → chair = roof."},
+        {"q":"Sky=star, star=cloud, cloud=earth, earth=tree, tree=book. Birds fly?","options":["Cloud","Sky","Star","Book"],"answer":2,"explanation":"Sky → code is star."}
+      ]
+    },
+    {
+      "id": "blood-relations",
+      "title": "Blood Relations",
+      "icon": "👨‍👩‍👧",
+      "description": "Puzzles about family relations. Draw a family tree.",
+      "rules": [
+        "Grandfather's son = father or uncle.",
+        "Mother's brother = maternal uncle.",
+        "Father's brother = paternal uncle.",
+        "Husband's/wife's parents = in-laws.",
+        "Only son of my mother = me (if male) or my brother.",
+        "Only daughter of my mother = me (if female) or my sister."
+      ],
+      "cheatCodes": [
+        "Always draw a tree. Male = square, female = circle, married = horizontal line, child = vertical line.",
+        "Work backwards from the given relationship.",
+        "For 'only son/daughter', it means there is exactly one."
+      ],
+      "questions": [
+        {"q":"Man is 'father of my only daughter-in-law's father-in-law'. Relation?","options":["Father","Brother","Husband","Father-in-law"],"answer":3,"explanation":"Daughter-in-law's father-in-law = my husband. His father = my father-in-law."},
+        {"q":"'She is the only daughter of my wife's mother-in-law'. Relation?","options":["Daughter","Wife","Sister","Sister-in-law"],"answer":2,"explanation":"Wife's mother-in-law = my mother. Her only daughter = my sister."},
+        {"q":"'Only daughter of my father's mother-in-law'. Relation?","options":["Daughter","Mother","Daughter-in-law","Mother-in-law"],"answer":1,"explanation":"Father's mother-in-law = mother's mother. Her only daughter = my mother."},
+        {"q":"A is mother of B. C is son of A. D is brother of E. E is daughter of B. Who is D's grandmother?","options":["A","B","C","D"],"answer":0,"explanation":"E's mother = B. B's mother = A. So D's grandmother = A."},
+        {"q":"A is brother of B. C is father of D. E is mother of B. A and D are brothers. E related to C?","options":["Sister","Sister-in-law","Niece","Wife"],"answer":3,"explanation":"A and D are brothers → same parents E and C. E is C's wife."},
+        {"q":"P brother of Q. R mother of Q. S father of R. T mother of S. P related to T?","options":["Grand-daughter","Great grandson","Grandson","Grandmother"],"answer":1,"explanation":"P is S's great-grandson."},
+        {"q":"F brother of A. C daughter of A. K sister of F. G brother of C. Uncle of G?","options":["A","C","F","K"],"answer":2,"explanation":"G's mother = A. A's brother = F. F is G's uncle."},
+        {"q":"Sushant: 'I am the only son of her mother's son'. Rita related to Sushant?","options":["Aunt","Niece","Mother","Cousin"],"answer":0,"explanation":"Rita's mother's son = Rita's brother. His only son = Sushant. So Rita is Sushant's aunt."}
+      ]
+    },
+    {
+      "id": "directions",
+      "title": "Directions",
+      "icon": "🧭",
+      "description": "Tracking movement in different directions. Draw a diagram.",
+      "rules": [
+        "Facing north: right = east, left = west.",
+        "Facing south: right = west, left = east.",
+        "Facing east: right = south, left = north.",
+        "Facing west: right = north, left = south.",
+        "Clockwise rotation: N → E → S → W. Anticlockwise: N → W → S → E."
+      ],
+      "cheatCodes": [
+        "Draw a small compass and track each move step by step.",
+        "Right turn = 90° clockwise. Left turn = 90° anticlockwise.",
+        "For shadow problems in the morning: shadow falls west. In the evening: shadow falls east."
+      ],
+      "questions": [
+        {"q":"Walk north 100m, right 75m, right 100m, left 25m. Final direction?","options":["North","South","West","East"],"answer":3,"explanation":"North → right East → right South → left East. Final = East."},
+        {"q":"West 30m, left 10m, right 5m, left 2m, right 12m, left 7m. Final direction?","options":["East","West","North","South"],"answer":3,"explanation":"After all turns, facing South."},
+        {"q":"Ram 20m east, right 10m, right 9m, left 5m, left 12m, left 5m. Direction now?","options":["South","West","North","East"],"answer":2,"explanation":"Final direction is North."},
+        {"q":"Face South, turn right 20m, right 10m, left 10m, right 20m, right 60m. Direction from start?","options":["North","North-East","North-West","East"],"answer":2,"explanation":"Net displacement is North-West."}
+      ]
+    },
+    {
+      "id": "clocks",
+      "title": "Clocks",
+      "icon": "🕐",
+      "description": "Angle problems between hour and minute hands.",
+      "rules": [
+        "Minute hand moves 6° per minute.",
+        "Hour hand moves 0.5° per minute.",
+        "Angle between hands at H:M = |30H - 5.5M| degrees.",
+        "At H hours, the hour hand is at 30H degrees.",
+        "Minute hand makes 360° in 60 minutes = 6°/min. Hour hand 360° in 12 hours = 0.5°/min."
+      ],
+      "cheatCodes": [
+        "Angle formula: |30H - 5.5M|. If > 180, subtract from 360.",
+        "For coincidence, the angle is 0: 30H - 5.5M = 0.",
+        "For right angle, the angle is 90°.",
+        "For opposite, the angle is 180°."
+      ],
+      "questions": [
+        {"q":"Angle made by minute hand in 29 sec?","options":["1740°","2.9°","29°","260°"],"answer":1,"explanation":"Minute hand 0.1°/sec. 29 × 0.1 = 2.9°."},
+        {"q":"Angle made by minute hand in 59 sec?","options":["6°","5°","5.9°","4.9°"],"answer":2,"explanation":"59 × 0.1 = 5.9°."},
+        {"q":"Angle between hands at 4:12?","options":["66°","44°","54°","60.5°"],"answer":2,"explanation":"|30×4 - 5.5×12| = |120-66| = 54°."},
+        {"q":"Angle between hands at 9:53?","options":["121.5°","21.5°","130°","68.5°"],"answer":1,"explanation":"|270 - 291.5| = 21.5°."},
+        {"q":"Angle between hands at 12:20?","options":["260°","110°","120°","20°"],"answer":1,"explanation":"|0 - 110| = 110°."},
+        {"q":"When do hands coincide between 6 and 7?","options":["6:37 2/11","6:43 8/11","6:32 8/11","6:54/11"],"answer":2,"explanation":"5.5x = 180 → x = 360/11 = 32 8/11."},
+        {"q":"Between 3 and 4, opposite (180°)?","options":["3:43 8/11","3:38 6/11","3:49 1/11","3:54 5/11"],"answer":2,"explanation":"6x - 90 - 0.5x = 180 → x = 540/11 = 49 1/11."}
+      ]
+    },
+    {
+      "id": "calendars",
+      "title": "Calendars",
+      "icon": "📅",
+      "description": "Day-of-week problems based on odd days.",
+      "rules": [
+        "Odd days in a year: 365 days = 52 weeks + 1 day. So 1 odd day.",
+        "Leap year: 366 days = 2 odd days.",
+        "100 years = 5 odd days. 200 = 3, 300 = 1, 400 = 0.",
+        "Day of week advances by odd days from a reference date.",
+        "Ordinary year = 1 odd day. Leap year = 2 odd days."
+      ],
+      "cheatCodes": [
+        "Count odd days between two dates. Advance the day of week by that amount.",
+        "For same-day recurrence: after 6 years (if no leap) or 11 years, the calendar repeats.",
+        "For 'N days older' problems, N mod 7 gives the day difference."
+      ],
+      "questions": [
+        {"q":"3rd is Tuesday. 6th from 23rd?","options":["Sunday","Saturday","Thursday","Friday"],"answer":1,"explanation":"23+5 = 28. 3 Tue → 24 Tue → 28 = Sat."},
+        {"q":"27th is Friday. 4th of that month?","options":["Sunday","Saturday","Wednesday","Friday"],"answer":2,"explanation":"27 Fri → 20 Fri → 13 Fri → 6 Fri. 5 Thu, 4 Wed."},
+        {"q":"Arnav's birthday Tue 14 March. Pranay's birthday 13 Sept same year. Day?","options":["Monday","Tuesday","Wednesday","Thursday"],"answer":2,"explanation":"183 days later. 183 mod 7 = 1. Tue + 1 = Wed."},
+        {"q":"Two days before yesterday was Sunday. Day after 3 days from tomorrow?","options":["Saturday","Monday","Sunday","Tuesday"],"answer":2,"explanation":"Yesterday = Tue, today = Wed, tomorrow = Thu. +3 = Sunday."}
+      ]
+    },
+    {
+      "id": "permutations-combinations",
+      "title": "Permutations & Combinations",
+      "icon": "🎲",
+      "description": "Permutation counts arrangements (order matters). Combination counts selections (order doesn't matter).",
+      "rules": [
+        "nPr = n! / (n-r)!. nCr = n! / (r!(n-r)!).",
+        "If A can be done in m ways and B in n ways: A or B = m+n. A and B = m×n.",
+        "Arranging n distinct items: n! ways.",
+        "If some items are identical: n! / (p! q! r!).",
+        "Selecting r from n: nCr."
+      ],
+      "cheatCodes": [
+        "OR → add. AND → multiply.",
+        "For constraints, handle the constrained position first.",
+        "For circular arrangements: (n-1)! ways."
+      ],
+      "questions": [
+        {"q":"Vijay has 3 shirts, 2 sweaters. Wear a shirt OR sweater?","options":["5","6","25","36"],"answer":0,"explanation":"3+2 = 5."},
+        {"q":"3 shirts, 2 sweaters. One shirt AND one sweater?","options":["5","6","25","36"],"answer":1,"explanation":"3×2 = 6."},
+        {"q":"3 ways A→B, 4 ways B→C. Ways A→C?","options":["7","12","15","13"],"answer":1,"explanation":"3×4 = 12."},
+        {"q":"Ways A→C and back?","options":["7","12","24","144"],"answer":3,"explanation":"12×12 = 144."},
+        {"q":"5 prizes to 5 girls, each gets one?","options":["25","5","125","120"],"answer":3,"explanation":"5! = 120."},
+        {"q":"5 girls, A not in 1st/2nd, B in 2nd/3rd?","options":["12","24","25","30"],"answer":3,"explanation":"Case B=2: A in 3/4/5, 3×3!=18. Case B=3: A in 4/5, 2×3!=12. Total 30."}
+      ]
+    },
+    {
+      "id": "probability",
+      "title": "Probability",
+      "icon": "🎯",
+      "description": "Probability = favourable outcomes / total outcomes.",
+      "rules": [
+        "P(A) = favourable / total. 0 ≤ P(A) ≤ 1.",
+        "P(not A) = 1 - P(A).",
+        "P(A and B) = P(A) × P(B) if independent.",
+        "P(A or B) = P(A) + P(B) - P(A and B).",
+        "At least one = 1 - P(none)."
+      ],
+      "cheatCodes": [
+        "For 'at least one', use 1 - P(none).",
+        "For independent events, multiply.",
+        "For coin tosses, use 1/2^n for specific sequences."
+      ],
+      "questions": [
+        {"q":"P(A)=0.4, P(B)=0.6, both solve?","options":["0.25","0.26","0.24","0.36"],"answer":2,"explanation":"0.4 × 0.6 = 0.24."},
+        {"q":"P(A)=0.8, P(B)=0.6. At least one hits?","options":["0.85","0.96","0.94","0.92"],"answer":3,"explanation":"1 - 0.2×0.4 = 0.92."},
+        {"q":"35% bonds, 18% oil, 7% both. P(bonds only)?","options":["0.28","0.26","0.24","0.36"],"answer":0,"explanation":"35-7 = 28% = 0.28."},
+        {"q":"60% women, 45% of those lawyers. P(woman lawyer)?","options":["25%","26%","27%","28%"],"answer":2,"explanation":"0.6 × 0.45 = 0.27."},
+        {"q":"3 coin tosses, at least one tail?","options":["8/15","2/5","7/8","3/3"],"answer":2,"explanation":"1 - 1/8 = 7/8."},
+        {"q":"Two coins, one H and one T?","options":["1/2","3/2","1/3","2/3"],"answer":0,"explanation":"HT, TH → 2/4 = 1/2."},
+        {"q":"4 coins, HHTT?","options":["1/2","2/3","3/8","3/5"],"answer":2,"explanation":"6/16 = 3/8."},
+        {"q":"Dice, even number?","options":["1/2","3/2","1/3","2/3"],"answer":0,"explanation":"3/6 = 1/2."},
+        {"q":"Card black suit?","options":["1/2","3/2","2/5","2/3"],"answer":0,"explanation":"26/52 = 1/2."},
+        {"q":"Spade?","options":["1/2","1/3","1/4","2/5"],"answer":2,"explanation":"13/52 = 1/4."},
+        {"q":"King or Queen?","options":["2/12","2/13","3/14","1/13"],"answer":1,"explanation":"8/52 = 2/13."}
+      ]
     }
   ]
 }
-
 const STORAGE_KEY = "verbalCram.progress.v1";
 
 let DATA = null;
