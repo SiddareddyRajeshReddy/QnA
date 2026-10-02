@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Verbal Ability — Exam Cram</title>
+<style>
+  :root {
+    --bg: #0f1220;
+    --panel: #1a1e35;
+    --panel-2: #232845;
+    --accent: #7c5cff;
+    --accent-2: #4ade80;
+    --danger: #f87171;
+    --text: #e8e9f3;
+    --muted: #9aa0bf;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    background: rgba(15,18,32,0.95);
+    backdrop-filter: blur(8px);
+    padding: 12px 20px;
+    border-bottom: 1px solid #2a2f4a;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  header h1 { font-size: 18px; margin: 0; }
+  .progress-wrap {
+    flex: 1;
+    min-width: 140px;
+    max-width: 320px;
+  }
+  .progress-bar {
+    height: 8px;
+    background: #2a2f4a;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-bar > div {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.3s ease;
+  }
+  .progress-text { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  button {
+    background: var(--accent);
+    color: white;
+    border: 0;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  button.ghost {
+    background: transparent;
+    border: 1px solid #3b4166;
+    color: var(--muted);
+  }
+  button:hover { opacity: 0.9; }
+  nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 12px 20px;
+    border-bottom: 1px solid #2a2f4a;
+  }
+  nav button {
+    background: var(--panel);
+    color: var(--text);
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 13px;
+    border: 1px solid #2a2f4a;
+  }
+  nav button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .section-title {
+    font-size: 26px;
+    margin: 10px 0 4px;
+  }
+  .section-desc {
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid #2a2f4a;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .card h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    color: var(--accent-2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .card ul { margin: 0; padding-left: 20px; }
+  .card li { margin: 4px 0; }
+  .q {
+    background: var(--panel);
+    border: 1px solid #2a2f4a;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .q .q-text { font-weight: 600; margin-bottom: 10px; }
+  .option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: var(--panel-2);
+    border: 1px solid #2a2f4a;
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin: 6px 0;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.15s ease;
+  }
+  .option:hover { border-color: var(--accent); }
+  .option.correct {
+    background: #14361f;
+    border-color: var(--accent-2);
+  }
+  .option.wrong {
+    background: #3a1a1a;
+    border-color: var(--danger);
+  }
+  .option[disabled] { cursor: default; }
+  .explanation {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #101528;
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    font-size: 13px;
+    color: #cfd3ee;
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: #2a2f4a;
+    color: var(--muted);
+    margin-left: 6px;
+  }
+  .badge.done { background: #14361f; color: var(--accent-2); }
+  .badge.wrong-done { background: #3a1a1a; color: var(--danger); }
+  footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  @media (max-width: 600px) {
+    .section-title { font-size: 20px; }
+    header h1 { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📚 Verbal Ability — Exam Cram</h1>
+  <div class="progress-wrap">
+    <div class="progress-bar"><div id="bar"></div></div>
+    <div class="progress-text" id="progressText">0 / 0 correct</div>
+  </div>
+  <button class="ghost" id="resetBtn">Reset</button>
+</header>
+
+<nav id="nav"></nav>
+
+<main id="main"></main>
+
+<footer>Saved automatically in your browser. Good luck! 🍀</footer>
+
+<script>
+/* ---------- Fallback data if fetch fails (works from file:// too) ---------- */
+const FALLBACK = {
+  "title": "Verbal Ability — Exam Cram",
+  "sections": [
+    {
+      "id": "reported-speech",
+      "title": "Reported Speech",
+      "icon": "💬",
+      "description": "Someone says something. Later you tell a third person what they said. You are not quoting, you are reporting.",
+      "rules": [
+        "Pronouns change according to who is speaking and who is listening. If Susan says \"I met your sister\" to you, and you later report it to someone else, \"I\" becomes \"he\" (Susan) and \"your\" becomes \"my\" (you, the listener). So it becomes \"Susan said that he had met my sister.\"",
+        "The tense usually goes one step back because you are reporting something said earlier. If someone says \"I am tired\", you report it as \"he was tired\". In the same way, \"will\" becomes \"would\", \"can\" becomes \"could\", and \"may\" becomes \"might\".",
+        "Time words change because the time of reporting is different from the time of speaking. \"Today\" becomes \"that day\", \"tomorrow\" becomes \"the next day\", \"yesterday\" becomes \"the day before\", and \"last week\" becomes \"the week before\".",
+        "Place words change in the same way. \"Here\" becomes \"there\", \"this\" becomes \"that\", and \"these\" become \"those\". For example, \"I don't have money for this ticket\" becomes \"he didn't have money for that ticket\".",
+        "The reporting verb also changes. \"Said\" becomes \"said that\", \"said to\" becomes \"told\", and \"asked\" stays \"asked\". For orders use \"ordered\", for requests use \"requested\", and for warnings use \"warned\"."
+      ],
+      "cheatCodes": [
+        "If the reporting verb is \"says\" (present tense), nothing changes. For example, \"He says, 'I am busy'\" becomes \"He says that he is busy.\" But if it is \"said\" (past tense), the tense goes one step back.",
+        "Universal truths, habits and proverbs never change tense. For example, \"The teacher said, 'The sun rises in the east'\" becomes \"The teacher said that the sun rises in the east.\"",
+        "A wh-question becomes \"asked + wh-word + subject + verb\" with no question mark. For example, \"'Where do you live?' he asked\" becomes \"He asked where I lived.\"",
+        "A yes/no question becomes \"asked if\" or \"asked whether\". For example, \"'Are you mad at me?' she asked\" becomes \"She asked if I was mad at her.\"",
+        "Orders and requests become \"told/ordered/requested + object + to + verb\". For example, \"David said, 'Go to that drawer'\" becomes \"David told his brother to go to that drawer.\" A negative command uses \"not to\". For example, \"'Don't push!' he said\" becomes \"He told the passengers not to push.\"",
+        "Exclamations become \"exclaimed with joy\" or \"exclaimed with sorrow\". For example, \"'What a beautiful day!' she said\" becomes \"She exclaimed with joy that it was a beautiful day.\"",
+        "If the speaker says \"Let's do something\", it becomes \"suggested that they should do something\". For example, \"'Let's go for a walk,' he said\" becomes \"He suggested that they should go for a walk.\""
+      ],
+      "questions": [
+        {"q":"Susan said, \"I met your sister last week.\"","options":["Susan said that I met your sister last week.","Susan said that I had met your sister last week.","Susan said that he had met my sister that week.","Susan said that he had met my sister the week before."],"answer":3,"explanation":"met becomes had met, your becomes my, last week becomes the week before."},
+        {"q":"Ivor said, \"You are not listening to me.\"","options":["Ivor said that you are not listening to her.","Ivor said that you were not listening to her.","Ivor said that I was not listening to her.","Ivor said I had not been listening to her."],"answer":2,"explanation":"are becomes were, you becomes I, me becomes her."},
+        {"q":"Bee Lee said, \"I am very happy today because my father has given me a car.\" (A month later.)","options":["Bee Lee said that he was very happy that day because his father has given him a car.","Bee Lee said that he was very happy that day because his father had given him a car.","Bee Lee said that he is very happy today because his father has given him a car.","Bee Lee said that he was very happy today because his father has given him a car."],"answer":1,"explanation":"am becomes was, today becomes that day, has given becomes had given."},
+        {"q":"The headmistress says, \"The young people of today are tomorrow's leaders.\"","options":["The headmistress says that the young people of today are tomorrow's leaders.","The headmistress says that the young people of that day are the next day's leaders.","The headmistress said that the young people of that day are the next day's leaders.","The headmistress said that the young people of yesterday are today's leaders."],"answer":0,"explanation":"Says is present tense, so no tense change."},
+        {"q":"The children said, \"We will build a sand-castle ourselves.\"","options":["The children said that they would build a sand-castle themselves.","The children said that they will build a sand-castle ourselves.","The children said that we would build a sand-castle ourselves.","The children said that we will build a sand-castle themselves."],"answer":0,"explanation":"will becomes would, we becomes they, ourselves becomes themselves."},
+        {"q":"He said, \"I am looking at the diagram.\"","options":["He said that I am looking at the diagram.","He said that I was looking at the diagram.","He says that he was looking at the diagram.","He said that he was looking at the diagram."],"answer":3,"explanation":"am becomes was, I becomes he."},
+        {"q":"Steven said, \"I don't have any money to pay for this ticket.\"","options":["Steven said that he don't have any money to pay for this ticket.","Steven said that he doesn't have any money to pay for that ticket.","Steven said that he didn't have any money to pay for that ticket.","Steven said that he hadn't had any money to pay for that ticket."],"answer":2,"explanation":"don't becomes didn't, this becomes that."},
+        {"q":"Jill said, \"Jack must give his answer to me.\"","options":["Jill said that Jack must give her answer to him.","Jill said that Jack had to give his answer to her.","Jill said that Jack had to give his answer to me.","Jill said that Jack must give his answer to me."],"answer":1,"explanation":"must becomes had to, me becomes her."},
+        {"q":"She said, \"I have been sewing from morning until now.\" (Next day.)","options":["She said that she had been sewing from morning until then.","She said that she has been sewing from morning until then.","She said that she had been sewing from morning until now.","She said that she has been sewing from morning until now."],"answer":0,"explanation":"have been becomes had been, now becomes then."},
+        {"q":"Carl said, \"You may meet them next month.\"","options":["Carl said that you may meet them next month.","Carl said that I may meet them next month.","Carl said that I might meet them the following month.","Carl said that I may meet them the following month."],"answer":2,"explanation":"may becomes might, next month becomes the following month."},
+        {"q":"Peter told his brother, \"Don't shake the table while I am writing!\"","options":["Peter told his brother not to shake the table while he was writing.","Peter told his brother don't shake the table while he was writing.","Peter told his brother to not shake the table while I am writing.","Peter told his brother that he should not shake the table."],"answer":0,"explanation":"Negative command uses not to. am writing becomes was writing."},
+        {"q":"She told us, \"Please bring your own plates and spoons.\"","options":["She told us that please bring our own plates and spoons.","She requested us to bring our own plates and spoons.","She requested us bring our own plates and spoons.","She said us to bring our own plates and spoons."],"answer":1,"explanation":"A request becomes requested plus object plus to plus verb."},
+        {"q":"The officer ordered his men, \"Return to the ship immediately!\"","options":["The officer ordered his men return to the ship immediately.","The officer ordered his men to return to the ship immediately.","The officer ordered his men that they return to the ship immediately.","The officer ordered his men returning to the ship immediately."],"answer":1,"explanation":"An order becomes ordered plus object plus to plus verb."},
+        {"q":"David told his brother, \"Go to that drawer and bring me the scissors.\"","options":["David told his brother go to that drawer and bring him the scissors.","David told his brother to go to that drawer and bring him the scissors.","David told his brother that go to that drawer and bring me the scissors.","David told his brother to go to this drawer and bring me the scissors."],"answer":1,"explanation":"An order becomes told plus object plus to plus verb. that becomes this from the listener's viewpoint."},
+        {"q":"The storyteller told the children, \"The prince and princess lived happily ever after.\"","options":["The storyteller told the children that the prince and princess lived happily ever after.","The storyteller told the children that the prince and princess had lived happily ever after.","The storyteller told the children the prince and princess lived happily ever after.","The storyteller told the children that the prince and princess have lived happily ever after."],"answer":1,"explanation":"lived becomes had lived, because past goes to past perfect."},
+        {"q":"The conductor said to the passengers, \"Don't push!\"","options":["The conductor told the passengers not to push.","The conductor told the passengers don't push.","The conductor said the passengers not push.","The conductor told the passengers to not pushing."],"answer":0,"explanation":"Negative command becomes told plus object plus not to plus verb."},
+        {"q":"He told his friend, \"I'm sorry, but I can't join you for lunch.\"","options":["He told his friend that he is sorry but he can't join him for lunch.","He told his friend that he was sorry but he couldn't join him for lunch.","He told his friend I am sorry but I can't join you for lunch.","He told his friend that he was sorry but he can't join him for lunch."],"answer":1,"explanation":"am becomes was, can't becomes couldn't, you becomes him."},
+        {"q":"Miss Lam told the pupils, \"Do the exercises from pages sixty to sixty-two.\"","options":["Miss Lam told the pupils do the exercises from pages sixty to sixty-two.","Miss Lam told the pupils to do the exercises from pages sixty to sixty-two.","Miss Lam told the pupils that they do the exercises from pages sixty to sixty-two.","Miss Lam told the pupils doing the exercises from pages sixty to sixty-two."],"answer":1,"explanation":"A command becomes told plus object plus to plus verb."},
+        {"q":"The personnel officer asked, \"Do you know how to operate a computer?\"","options":["The personnel officer asked if I knew how to operate a computer.","The personnel officer asked do I know how to operate a computer.","The personnel officer asked that I knew how to operate a computer.","The personnel officer asked if I know how to operate a computer."],"answer":0,"explanation":"A yes/no question becomes asked if plus subject plus verb. know becomes knew."},
+        {"q":"The elder sister asked, \"Are you mad at me?\"","options":["The elder sister asked are you mad at me.","The elder sister asked if I was mad at her.","The elder sister asked that I was mad at her.","The elder sister asked if you were mad at me."],"answer":1,"explanation":"A yes/no question becomes if plus I plus was plus mad at her."},
+        {"q":"The rich man said to the waitress, \"Keep the change.\"","options":["The rich man told the waitress to keep the change.","The rich man told the waitress keep the change.","The rich man said the waitress to keep the change.","The rich man told the waitress that keep the change."],"answer":0,"explanation":"A command becomes told plus object plus to plus verb."},
+        {"q":"I said to myself, \"I will definitely beat him in the next event.\"","options":["I told myself that I will definitely beat him in the next event.","I told myself that I would definitely beat him in the next event.","I told myself that I would definitely beat him in the following event.","I said to myself that I will definitely beat him in the next event."],"answer":1,"explanation":"will becomes would because the reporting verb is past."},
+        {"q":"He said, \"I found the money in the garden yesterday.\"","options":["He said that he found the money in the garden yesterday.","He said that he had found the money in the garden the day before.","He said that I had found the money in the garden yesterday.","He said that he has found the money in the garden the day before."],"answer":1,"explanation":"found becomes had found, yesterday becomes the day before."},
+        {"q":"The teacher explained to us, \"The moon takes 28 days to go around the earth.\"","options":["The teacher explained that the moon took 28 days to go around the earth.","The teacher explained that the moon takes 28 days to go around the earth.","The teacher explained that the moon has taken 28 days to go around the earth.","The teacher explained that the moon had taken 28 days to go around the earth."],"answer":1,"explanation":"A universal truth does not change tense."},
+        {"q":"Dad warned us, \"Don't touch the fresh paint!\"","options":["Dad warned us to not touch the fresh paint.","Dad warned us not to touch the fresh paint.","Dad warned us that don't touch the fresh paint.","Dad warned us don't touch the fresh paint."],"answer":1,"explanation":"A warning becomes warned plus object plus not to plus verb."}
+      ]
+    },
+    {
+      "id": "sva",
+      "title": "Subject–Verb Agreement",
+      "icon": "🧩",
+      "description": "The verb must match the subject in number. Singular subject takes a singular verb. Plural subject takes a plural verb. For example, The dog runs. The dogs run.",
+      "rules": [
+        "\"A number of\" takes a plural verb because it means many. For example, \"A number of writers have arrived.\" But \"the number of\" takes a singular verb because it refers to one count. For example, \"The number of seats has increased.\"",
+        "\"One of\" is always followed by a plural noun but takes a singular verb. For example, \"One of the boys is here.\"",
+        "\"Each\", \"every\", \"either\" and \"neither\" are always singular. For example, \"Each of them is coming\" and \"Neither of the two boys is coming.\"",
+        "When \"neither...nor\", \"either...or\" or \"not only...but also\" join two subjects, the verb agrees with the nearer subject. For example, \"Neither you nor I am guilty\" because the nearer subject is I. Another example: \"Not only the teachers but also the principal was worried\" because the nearer subject is principal.",
+        "\"Along with\", \"together with\", \"as well as\", \"besides\" and \"in addition to\" do not change the number of the subject. The verb agrees with the first subject. For example, \"The teacher, together with his students, was there\" because the real subject is teacher.",
+        "Two nouns joined by \"and\" usually take a plural verb. For example, \"Fire and water do not agree.\" But if they refer to one idea or one dish, use a singular verb. For example, \"Rice and curry is my favourite food\" and \"Law and order is to be maintained.\"",
+        "Book titles, country names, distances and amounts of money take a singular verb. For example, \"The Tale of Two Cities is an interesting novel\", \"The United States has a big navy\", and \"Ten thousand rupees is not a large sum.\"",
+        "\"Many a\" and \"more than one\" are followed by a singular noun and take a singular verb. For example, \"Many a boy has left the class\" and \"More than one student has qualified.\"",
+        "\"The poor\", \"the rich\" and \"the unemployed\" are plural. Also, \"cattle\", \"police\", \"gentry\" and \"people\" are plural. For example, \"The unemployed are a burden on society\" and \"Cattle were first domesticated.\"",
+        "\"News\", \"mathematics\", \"physics\", \"economics\" and \"politics\" look plural but are treated as singular. For example, \"No news is good news.\"",
+        "\"A series of\" is singular and \"the variety of\" is singular. For example, \"A series of debates was organized\" and \"The variety of food is very common.\" But \"a variety of\" is plural. For example, \"A variety of dishes were served.\"",
+        "\"Half of\", \"per cent of\" and \"a lot of\" depend on the noun after \"of\". For example, \"Half of the movies are leaked\" because movies is plural, but \"Lots of money has been spent\" because money is singular.",
+        "With \"It is I who\" or \"It is you who\", the verb agrees with the pronoun after \"who\". For example, \"It is I who am responsible\" and \"It is you who are responsible.\""
+      ],
+      "cheatCodes": [
+        "Find the real subject first and ignore the phrases in between. In \"The teacher, together with his students, was there\", the real subject is teacher, so the verb is was.",
+        "When you see \"of\", look at the noun BEFORE \"of\", not after. In \"A box of apples is on the table\", the subject is box, which is singular.",
+        "\"And\" usually means plural. For example, \"Ram and Shyam are here.\" But when the two words name one thing, it is singular. For example, \"Bread and butter is my breakfast.\"",
+        "Titles and amounts look plural but act singular. For example, \"The Three Musketeers has been translated\" and \"Twenty rupees is not enough.\"",
+        "\"Either\" and \"neither\" alone are singular. For example, \"Either of the two boys is coming.\" But in \"either...or\" and \"neither...nor\", use the nearer subject. For example, \"Neither the king nor the ministers desire it.\""
+      ],
+      "questions": [
+        {"q":"A company of two hundred soldiers (A) / were crossing the bridge. (B) / no error (C)","options":["A","B","C"],"answer":1,"explanation":"The subject is company, which is singular. So were becomes was."},
+        {"q":"A number of writers (A) / has arrived here. (B) / no error (C)","options":["A","B","C"],"answer":1,"explanation":"A number of takes a plural verb. So has becomes have."},
+        {"q":"Everyone (A) / of them (B) / are coming. (C) / no error (D)","options":["A","B","C","D"],"answer":2,"explanation":"Everyone is singular. So are becomes is."},
+        {"q":"Neither (A) / of the two boys (B) / are coming. (C) / no error (D)","options":["A","B","C","D"],"answer":2,"explanation":"Neither alone is singular. So are becomes is."},
+        {"q":"Neither you (A) / nor I (B) / are guilty. (C) / no error (D)","options":["A","B","C","D"],"answer":2,"explanation":"The nearer subject is I, so we use am. are becomes am."},
+        {"q":"Neither the king (A) / nor the ministers (B) / desires it. (C) / no error (D)","options":["A","B","C","D"],"answer":2,"explanation":"The nearer subject is ministers, which is plural. desires becomes desire."},
+        {"q":"Law and order (A) / are to be maintained (B) / at all costs. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"Law and order is one idea, so it is singular. are becomes is."},
+        {"q":"Rice and curry (A) / are (B) / my favourite food. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"Rice and curry is one dish, so it is singular. are becomes is."},
+        {"q":"Ten thousand rupees (A) / are not (B) / a large sum. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"An amount of money is singular. are becomes is."},
+        {"q":"The Tale of Two Cities (A) / are (B) / an interesting novel. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"A book title is singular. are becomes is."},
+        {"q":"The United States (A) / have (B) / a big navy. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"A country name is singular. have becomes has."},
+        {"q":"The teacher (A) / together with his students (B) / were there. (C) / no error (D)","options":["A","B","C","D"],"answer":2,"explanation":"The real subject is teacher, which is singular. were becomes was."},
+        {"q":"A table in addition (A) / to two chairs are (B) / all that he has. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"The real subject is table, which is singular. are becomes is."},
+        {"q":"Kamal and not his brothers (A) / are (B) / to blame. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"The first subject Kamal is singular. are becomes is."},
+        {"q":"Many a boy (A) / have (B) / left the class. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"Many a takes a singular verb. have becomes has."},
+        {"q":"This is one of the best novels (A) / that (B) / has been published. (C) / no error (D)","options":["A","B","C","D"],"answer":2,"explanation":"that refers to novels, which is plural. has becomes have."},
+        {"q":"He is (A) / one of the greatest leaders (B) / who has served India. (C) / no error (D)","options":["A","B","C","D"],"answer":2,"explanation":"who refers to leaders, which is plural. has becomes have."},
+        {"q":"She weeps (A) / as though (B) / she is in despair. (C) / no error (D)","options":["A","B","C","D"],"answer":2,"explanation":"As though usually takes the unreal past. So is becomes were."},
+        {"q":"The difficulty of getting house (A) / in big cities (B) / are great. (C) / no error (D)","options":["A","B","C","D"],"answer":2,"explanation":"The subject is difficulty, which is singular. are becomes is."},
+        {"q":"The white and black cow (A) / are grazing (B) / in the field. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"Same article the means one cow. are becomes is."},
+        {"q":"Our (A) / only guide were (B) / those stars. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"The subject is guide, which is singular. were becomes was."},
+        {"q":"A large number of students (A) / was (B) / present today. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"A large number of takes a plural verb. was becomes were."},
+        {"q":"Not wealth (A) / but health (B) / count in life. (C) / no error (D)","options":["A","B","C","D"],"answer":2,"explanation":"The nearer subject is health, which is singular. count becomes counts."},
+        {"q":"The committee (A) / have issued (B) / its report. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"A committee acting as one body is singular. have becomes has."},
+        {"q":"Fire and water (A) / does not (B) / agree. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"Two things joined by and are plural. does becomes do."},
+        {"q":"Mohan as well as (A) / Sohan are (B) / guilty. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"The first subject Mohan is singular. are becomes is."},
+        {"q":"No news (A) / are (B) / good news. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"News is singular. are becomes is."},
+        {"q":"Veena, and not you, (A) / have (B) / won the prize. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"The first subject Veena is singular. have becomes has."},
+        {"q":"This is the only (A) / one of his stories (B) / that are worth reading. (C) / no error (D)","options":["A","B","C","D"],"answer":2,"explanation":"only one is singular. are becomes is."},
+        {"q":"Many a criminal (A) / have been (B) / arrested. (C) / no error (D)","options":["A","B","C","D"],"answer":1,"explanation":"Many a takes a singular verb. have becomes has."}
+      ]
+    },
+    {
+      "id": "spotting-errors",
+      "title": "Spotting Errors",
+      "icon": "🔍",
+      "description": "A sentence is split into parts. One part has a mistake. You find it. Look for articles, prepositions, tenses, parallelism, comparatives, double negatives, redundancy, subject-verb agreement and pronouns.",
+      "rules": [
+        "Check every article (a, an, the). For example, \"He is a honest man\" is wrong because honest begins with a vowel sound. It should be \"an honest man\".",
+        "Fixed preposition pairs must be memorised. For example, we say accustomed to and not accustomed with; capable of and not capable in; prevent from and not prevent to.",
+        "Check the tense against any time word. For example, \"I have met him yesterday\" is wrong because yesterday needs past simple. It should be \"I met him yesterday.\"",
+        "Parallel structures must match. For example, \"She likes singing, dancing and to paint\" is wrong because it mixes gerunds and infinitives. It should be \"She likes singing, dancing and painting.\"",
+        "Use than and not then for comparisons. Also, use as...as in positive comparisons. For example, \"He is taller than me\" and \"She is as smart as her sister.\"",
+        "Avoid redundant words. For example, return back, discuss about, repeat again, more better and most best are all wrong.",
+        "Uncountable nouns have no plural s. For example, luggages, furnitures, informations and advices are all wrong. Say luggage, furniture, information and advice."
+      ],
+      "cheatCodes": [
+        "Read the sentence aloud. Your ear often catches the mistake before your brain does. For example, \"He don't know\" sounds wrong and \"he doesn't know\" sounds right.",
+        "If a part looks almost right, it is probably the error. Exam setters hide mistakes in ordinary-looking words.",
+        "Check the verb tense against any time word in the sentence. For example, since needs present perfect, yesterday needs past simple, and now needs present continuous.",
+        "Check every preposition. Around thirty percent of spotting-error questions hide the mistake in a preposition. For example, \"He is married with her\" should be \"He is married to her.\"",
+        "No error is a real answer. Do not force an error where there is none. Some sentences in the exam are correct."
+      ],
+      "questions": [
+        {"q":"I no longer has to worry (a) / about rushing out to buy groceries (b) / at the last minute or stand in a line (c) / to get the tickets. (d) / No error (e)","options":["a","b","c","d","e"],"answer":0,"explanation":"has becomes have because the subject is I."},
+        {"q":"The streets (a) / are so wet (b) / it should have (c) / rained last night. (d) / No error (e)","options":["a","b","c","d","e"],"answer":2,"explanation":"should have becomes must have because it is a deduction about the past."},
+        {"q":"The wounded men (a) / was being (b) / helped by (c) / some boys. (d) / No error (e)","options":["a","b","c","d","e"],"answer":1,"explanation":"men is plural, so was becomes were."},
+        {"q":"I found this toy (a) / while digging (b) / in the garden, but (c) / I don't know to whom it belonged to. (d) / No error (e)","options":["a","b","c","d","e"],"answer":3,"explanation":"There is a double to. The correct form is to whom it belonged."},
+        {"q":"He fell from the running train (a) / and would have died (b) / if the villagers did not get (c) / him admitted in the nearby hospital. (d) / No error (e)","options":["a","b","c","d","e"],"answer":2,"explanation":"In the third conditional, did not get becomes had not got."},
+        {"q":"Wearing extremely fashionable clothes (a) / and surrounded by photographers (b) / and press operators (c) / she swept up the microphone. (d) / No error (e)","options":["a","b","c","d","e"],"answer":3,"explanation":"swept up is the wrong phrasal verb here. It should be swept or picked up."},
+        {"q":"The Hindi and Marathi are (a) / different forms of the Sanskrit language (b) / which were once spoken (c) / in almost every part of India. (d) / No error (e)","options":["a","b","c","d","e"],"answer":0,"explanation":"Remove the article the before Hindi and Marathi."},
+        {"q":"As much as I admire him (a) / for his sterling qualities (b) / I cannot excuse him (c) / for being unfair to his friends. (d) / No error (e)","options":["a","b","c","d","e"],"answer":0,"explanation":"As much as becomes Much as at the start of a sentence."},
+        {"q":"The RBI has proposed to introduce (a) / polymer notes after taking into considering (b) / the cost and longevity (c) / associated with their manufacturing. (d) / No error (e)","options":["a","b","c","d","e"],"answer":1,"explanation":"considering becomes consideration. The phrase is take into consideration."},
+        {"q":"He managed to board (a) / the running train (b) / but all his luggages was (c) / left on the station. (d) / No error (e)","options":["a","b","c","d","e"],"answer":2,"explanation":"luggages becomes luggage because luggage is uncountable."},
+        {"q":"Qasim tells (a) / the interviewer, (b) / \"I have got my (c) / MBA degree in 2010\". (d) / No error (e)","options":["a","b","c","d","e"],"answer":2,"explanation":"have got becomes got because 2010 is a specific past year."},
+        {"q":"It being a sunny day, (a) / the girls will decide to (b) / go on a picnic to the beach and (c) / indulge in some water sports. (d) / No error (e)","options":["a","b","c","d","e"],"answer":1,"explanation":"will decide becomes decided for tense consistency."},
+        {"q":"As soon as the telegram (a) / reached Nanda's house that her (b) / family set out to rescue (c) / her from the situation. (d) / No error (e)","options":["a","b","c","d","e"],"answer":1,"explanation":"that her is wrong. It should be reached Nanda's house and her family set out."},
+        {"q":"He obtained good marks (a) / not only in English essay (b) / but also in Arithmetic which was (c) / full of complicated calculations. (d) / No error (e)","options":["a","b","c","d","e"],"answer":1,"explanation":"The article is missing. It should be in the English essay."},
+        {"q":"Several prominent figures (a) / involved in the scandal (b) / are required to appear (c) / to the investigation committee. (d) / No error (e)","options":["a","b","c","d","e"],"answer":3,"explanation":"appear to becomes appear before."},
+        {"q":"The lecture to be held (a) / in the auditorium tomorrow (b) / was open to the public (c) / and free of charge. (d) / No error (e)","options":["a","b","c","d","e"],"answer":2,"explanation":"was becomes is because the lecture is in the future."},
+        {"q":"The speech he made (a) / on his visit to our college (b) / concerning our society's needs (c) / have bothered me greatly. (d) / No error (e)","options":["a","b","c","d","e"],"answer":3,"explanation":"have becomes has because the subject is speech."},
+        {"q":"Human babies whose mothers (a) / have had the flu while pregnant may (b) / have a greater risk of developing (c) / schizophrenia lately in life. (d) / No error (e)","options":["a","b","c","d","e"],"answer":3,"explanation":"lately becomes later."},
+        {"q":"Political education in real sense (a) / should develop people (b) / who will be committed to (c) / bring social change. (d) / No error (e)","options":["a","b","c","d","e"],"answer":3,"explanation":"bring becomes bringing because committed to takes a gerund."},
+        {"q":"Marking the fifth consecutive month of softening retail (a) / inflation measured by CPI turned (b) / down more sharper than expected in December (c) / and reached its lowest reading. (d) / No error (e)","options":["a","b","c","d","e"],"answer":2,"explanation":"more sharper becomes sharper. Two comparatives cannot be used together."},
+        {"q":"It has become the norm for rich and powerful (a) / to get bail with ease while the commoner (b) / and the poor languish in jail, the Law Commission (c) / of India said in its latest report. (d) / No error (e)","options":["a","b","c","d","e"],"answer":4,"explanation":"The sentence is correct."},
+        {"q":"The minister insisted on the need for improve (a) / the railway safety saying India (b) / needs to invest heavily in railway infrastructure (c) / to meet the decades-old backlog. (d) / No error (e)","options":["a","b","c","d","e"],"answer":0,"explanation":"improve becomes improving because need for takes a noun or gerund."},
+        {"q":"Vardhini of RBI very nearly lost the match (a) / and failed to qualify herself for the main draw (b) / of the LIC-South Zone National-ranking (c) / table tennis tournament. (d) / No error (e)","options":["a","b","c","d","e"],"answer":1,"explanation":"qualify herself becomes qualify."},
+        {"q":"The Climate Bond Initiative, in its (a) / India update, indicated that about (b) / 62 percent of the green bond proceeds has been (c) / allocated to renewable energy projects. (d) / No error (e)","options":["a","b","c","d","e"],"answer":2,"explanation":"has becomes have because proceeds is plural."},
+        {"q":"On July 4, North Korea tested (a) / Hwasong-14, described as (b) / an intercontinental ballistic missile capable in (c) / reaching the U.S. mainland. (d) / No error (e)","options":["a","b","c","d","e"],"answer":2,"explanation":"capable in becomes capable of."},
+        {"q":"The science project (a) / was equally successful as (b) / the software project (c) / they had presented. (d) / No Error (e)","options":["a","b","c","d","e"],"answer":1,"explanation":"equally successful as becomes as successful as."},
+        {"q":"Another change that (a) / I notice in her is that she (b) / avoids to speak to me. (c) / No error (d)","options":["a","b","c","d"],"answer":2,"explanation":"avoids to speak becomes avoids speaking."},
+        {"q":"One of the state (a) / in which there was a severe drought (b) / last year is Maharashtra. (c) / No error (d)","options":["a","b","c","d"],"answer":0,"explanation":"state becomes states because one of takes a plural noun."},
+        {"q":"The stock was (a) / divided among (b) / the two brothers. (c) / No error (d)","options":["a","b","c","d"],"answer":1,"explanation":"among becomes between because it is used for two people."},
+        {"q":"I will try to be on time (a) / but don't worry when (b) / I am late. (c) / No error (d)","options":["a","b","c","d"],"answer":1,"explanation":"when becomes if because the situation is uncertain."}
+      ]
+    },
+    {
+      "id": "para-jumbles",
+      "title": "Para Jumbles",
+      "icon": "🔗",
+      "description": "Sentences of a paragraph are shuffled. You arrange them logically to form a coherent paragraph.",
+      "rules": [
+        "Find the opening sentence. It is usually a general statement that introduces the topic and does not start with a pronoun. For example, \"Sriracha hot sauce originated in eastern Thailand\" is a good opener. But \"It may be derided as a modish condiment\" is not, because it needs a noun before it.",
+        "Find the closing sentence. It usually gives a conclusion or a result, or starts with thus, therefore or finally. For example, \"So, I decided to spend a day having it with everything\" is a natural ending.",
+        "Use pronouns to link sentences. A pronoun in one sentence refers to a noun in the previous sentence. For example, \"Thom Feeney has set up a page. His reasoning is...\" Here his links to Thom Feeney.",
+        "Use articles to link. A or an introduces something for the first time, and the refers to it again. For example, \"A man walked in. The man was tall.\"",
+        "Use connectors to link. Words like however, therefore, but, and, so and moreover join ideas. For example, \"It hasn't happened. However, audiences dipped in 1984.\"",
+        "Look for chronology. If sentences mention first, then, after that or finally, arrange them in that order. For example, \"One was X. The second was Y. The last was Z.\"",
+        "General information comes first and specific information comes later. Cause comes before effect. Theory comes before example."
+      ],
+      "cheatCodes": [
+        "Look for a pair that must go together, then eliminate options that break that pair. For example, if you see \"He is a doctor. He works in Delhi\", that pair is fixed.",
+        "Pronouns are your best clue. He, she, it and they must have a matching noun before them.",
+        "The first sentence is usually a general statement and the last is usually a conclusion. Do not start with \"This is because...\" or \"Therefore...\".",
+        "Time words fix the order. Yesterday, today, tomorrow, now and then tell you which sentence comes first.",
+        "Eliminate options based on the first sentence alone. Very often only one option starts with a good opener."
+      ],
+      "questions": [
+        {"q":"A. Tigers have been known to eat up to 60 pounds of meat in one night, but more often they consume about 12 pounds during a meal. B. It may take days for a tiger to finish eating its kill. The cat eats until it's full, and then covers the carcass. C. When it's hungry again, the tiger comes back to feed some more, until the meat is gone.","options":["ABC","BAC","BCA","None"],"answer":0,"explanation":"A gives the general fact. B tells what happens after. C tells when it returns later."},
+        {"q":"A. The results, presented on Tuesday at the Alzheimer's Society conference, have been hailed as hugely promising. B. Speaking ahead of her presentation, Giovanna Mallucci... C. This means you'd do a straightforward basic clinical trial... D. Two licensed drugs have been shown to halt brain degeneration in mice...","options":["ACBD","BDAC","CDAB","DABC"],"answer":3,"explanation":"D introduces the finding. A gives the results. B gives the speaker. C gives the implication."},
+        {"q":"A. The latest research suggests that the build-up of abnormal amyloid proteins... B. Instead, Prof Mallucci argues... C. In mice with prion disease... D. The drugs work by inhibiting an enzyme...","options":["ACBD","BACD","DCBA","CABD"],"answer":0,"explanation":"A introduces the research. C mentions the mice. B gives the argument. D explains how the drugs work."},
+        {"q":"A. Now, you can get a keyring-friendly mini-pack... B. It may be derided as a modish condiment... C. So, I decided to spend a day having it with everything. D. Sriracha hot sauce, which originated in eastern Thailand...","options":["ACBD","BDAC","CADB","BDAC"],"answer":1,"explanation":"D introduces Sriracha. B mentions its reputation. C gives the decision. A mentions the new product."},
+        {"q":"A. This is because at 11pm on Tuesday night Greece failed to make a 1.6bn euro payment... B. The effective sovereign default has ratcheted up pressure... C. Greece's banks have been shut since 29 June... D. The ECB decided to maintain the current funding limit.","options":["CABD","BDAC","DCBA","CDBA"],"answer":3,"explanation":"C mentions the banks shut. A gives the reason. B gives the effect. D gives the ECB decision."},
+        {"q":"A. \"My opinion is that we need to invest for something to grow...\" B. His reasoning: there are 503 million people in the EU... C. With Greece's government and its European creditors hitting loggerheads... D. Thom Feeney... has set up a crowd funding page...","options":["ABCD","CDBA","ACBD","DCBA"],"answer":1,"explanation":"C gives the context. D introduces Feeney. B gives the reasoning. A gives the opinion."},
+        {"q":"A. A story not only allows us to understand ourselves... B. Forced Entertainment's retelling of the entire Shakespearean canon... C. One is simply the bare bones... D. As the Mahabharata tells us at its beginning... E. Not least because it points up the vast difference...","options":["ACBDE","BECAD","DACBE","BEACD"],"answer":2,"explanation":"D opens with the Mahabharata. A says the story allows us. C says one is bare bones. B mentions Forced Entertainment. E ends with not least because."},
+        {"q":"A. I wanted to be taken seriously. B. Not about the teaching material... C. The first time I taught a writing class... D. I really wanted to wear my shiny lip gloss... E. Instead I was worried about what to wear. F. And I was worried that if I looked too feminine...","options":["ABDCEF","CBFDAE","CBEADF","ABCFED"],"answer":2,"explanation":"C gives the first time. B says not about material. E says instead worried. A says wanted serious. D says wear gloss. F says worried feminine."},
+        {"q":"A. One was in The Famous Victories of Henry V... B. And not a single one of them was exactly as it appears... C. The second was near the beginning of Ivo van Hove's Kings of War... D. The last was on Sunday night... E. Were any of these performances less Shakespearean... F. Over the last couple of weeks I've seen three very different versions... G. I'd say a resounding no.","options":["ACBDEFG","GFEDACB","FBACDEG","DEGACBF"],"answer":2,"explanation":"F opens. A gives the first. C gives the second. D gives the last. B says not a single one. E asks were any. G answers no."},
+        {"q":"1. What does the state do in a country where tax morality is very low? A. It tries to spy upon the taxpayers. B. It investigates income sources and spending patterns. C. Exactly what the tax authority tries to do now even if inconsistently. D. It could also encourage people to denounce to the tax authorities any conspicuously prosperous neighbours. 2. The ultimate solution would be an Orwellian System.","options":["BACD","DBAC","ABCD","DCBA"],"answer":2,"explanation":"A says spy. B says investigate. C says exactly what the authority does. D says it could also encourage."},
+        {"q":"1. The fragile Yugoslav State has uncertain future. A. Thus there will surely be chaos and uncertainty if the people fail to settle their differences. B. Sharp ideological differences already exist in the country. C. Ethnic, regional, linguistic and material disparities are profound. D. The country will also lose the excellent reputation it enjoyed.","options":["BCAD","ADCB","ACBD","DBCA"],"answer":0,"explanation":"B gives ideological differences. C gives ethnic disparities. A gives the result. D says also lose reputation."},
+        {"q":"1. India's experience of industrialization is characteristic of the difficulties faced by a newly independent developing country. A. In 1947 India was undoubtedly an underdeveloped country with one of the lowest per capita incomes in the world. B. Indian industrialization was the result of a conscious deliberate policy of growth by an indigenous political elite. C. Today India ranks fifth in the international community of nations if measured in terms of purchasing power. D. Even today, however, the benefits of Indian industrialization have not reached the masses. 2. In India has been a limited success.","options":["CDAB","DCBA","ACBD","BACD"],"answer":3,"explanation":"B gives the policy. A gives 1947. C gives today. D says even today."},
+        {"q":"1. The New Economic Policy comprises the various policy measures and changes introduced since July 1991. A. There is a common thread running through all these measures. B. The objective is simple - to improve the efficiency of the system. C. The regulator mechanism involving multitude of controls has fragmented the capacity and reduced. D. This is to be achieved by removing the barriers and restriction on the entry and growth of firms. 2. ...","options":["DCAB","ABCD","BDAC","CDBA"],"answer":1,"explanation":"A gives the common thread. B gives the objective. C gives the regulator mechanism. D says this is to be achieved."},
+        {"q":"1. Commercial energy consumption shows an increasing trend and poses a major challenge for the future. A. The demand for petroleum during 1996-97 and 2006-07 is anticipated to 81 million tons and 125 million tons respectively. B. According to the projections of the 14th power Survey Committee Report, the electricity generation requirements from utilities will be about 415 billion units by 1996-97 and 824 billion units by 2006-07. C. The production of coal should reach 303 million tons by 1996-97 to achieve plan targets and 460 million tons by 2006-07. D. The demand for petroleum products has already outstripped indigenous production. 2. Electricity is going to play a major role.","options":["DACB","CADB","BADC","ABCD"],"answer":0,"explanation":"D says demand outstripped. A gives 1996-97 demand. C gives coal production. B gives electricity projections."},
+        {"q":"1. Count Rumford is perhaps best known for his observations on the nature of heat. A. He undertook several experiments in order to test the theories of the origin of frictional heat. B. According to the calorists, the heat was produced by the caloric squeezed out of the chips. C. Lavoisier had introduced the term caloric for the weightless substance heat. D. In the ammunitions factory in Munich, Rumford noticed that a considerable degree of heat developed in a brass gun. 2. Rumford could not believe that the amount of heat generated could have come from the small amount of dust created.","options":["ABCD","CBDA","ACDB","CDAB"],"answer":1,"explanation":"C mentions Lavoisier and caloric. D gives the observation. A gives the experiments. B gives the calorists."},
+        {"q":"1. The death of cinema has been predicted annually. A. It hasn't happened. B. It was said that the television would kill it off-and indeed audiences plummeted. C. Film has enjoyed a renaissance, and audiences are now roughly double. D. Then the home computer became the projected nemesis followed by satellite television. 2. Why? probably because we human beings feel the need to share our fantasies.","options":["CADB","BDAC","ABDC","DABC"],"answer":1,"explanation":"B mentions television. D mentions then home computer. A says hasn't happened. C says renaissance."},
+        {"q":"1. Visual recognition involves storing and retrieving of memories. A. Psychologists of the Gestalt school maintain that objects are recognized as a whole in a parallel procedure. B. Neural activity, triggered by the eye, forms an image in the brain's memory system. C. Controversy surrounds the question of whether recognition is a single one-step procedure or a serial step-by-step one. D. When an object is encountered again, it is matched with its internal recognition. 2. The internal representation is matched with the retinal image in single operation.","options":["DBAC","DCAB","BDCA","CABD"],"answer":3,"explanation":"C gives the controversy. A gives the Gestalt view. B gives neural activity. D gives when encountered."},
+        {"q":"1. It depends upon the P. a new heaven on earth or to destroy Q. user, whether science will be used to create R. the word in a S. outlook and mentality of the 2. common conflagration.","options":["PQRS","SPQR","QPRS","SQPR"],"answer":3,"explanation":"S gives outlook and mentality of the. Q gives user, whether science. P gives a new heaven. R gives the word in a."},
+        {"q":"1. The English P. plundered the country Q. and raw materials, R. as a result, the Company became rich S. of precious mineral wealth 2. and the Indian people became poor.","options":["PQSR","SQPR","SRQP","PSQR"],"answer":3,"explanation":"P says plundered. S gives of precious mineral wealth. Q gives and raw materials. R gives as a result."},
+        {"q":"1. The power and pride P. for in the courage Q. of Sparta was above all R. discipline and skill of these troops S. in its army, 2. it found its security and its ideal.","options":["SPRQ","PQRS","QSPR","PRQS"],"answer":2,"explanation":"Q gives of Sparta was above all. S gives in its army. P gives for in the courage. R gives discipline and skill."}
+      ]
+    },
+    {
+      "id": "fill-blanks",
+      "title": "Sentence Completion (FIB)",
+      "icon": "✏️",
+      "description": "A sentence with a blank. Choose the word that fits best. The clue is often in a contrast word such as despite, although, but, however or yet.",
+      "rules": [
+        "Read the whole sentence before choosing. The meaning of the whole sentence decides the blank.",
+        "Notice contrast words like despite, although, but, however and yet. They signal that the blank goes the opposite way. For example, in \"Despite her diligent efforts, she failed\", the word despite prepares you for something positive like diligent.",
+        "Learn common collocations. For example, we say diligent efforts, profound knowledge, futile attempts, inclement weather, onset of disease and implementation of policy.",
+        "Eliminate absurd options. If the sentence is about weather, a word like meticulous cannot be the answer."
+      ],
+      "cheatCodes": [
+        "Look for the contrast word. If the first half is positive, the blank is usually negative, and vice versa.",
+        "If two options mean nearly the same thing, both are wrong. Exam setters never give two correct answers.",
+        "Trust collocations, which are words that naturally go together. For example, we say heavy rain and not strong rain, and fast food and not quick food.",
+        "If you are stuck, pick the most formal-sounding option. Exams love words like profound, meticulous, tenacious and inclement."
+      ],
+      "questions": [
+        {"q":"Despite her ______ efforts, she couldn't achieve the desired outcome.","options":["diligent","lethargic","indifferent","sporadic"],"answer":0,"explanation":"Despite plus couldn't achieve means she tried hard. So diligent fits."},
+        {"q":"The sudden change in weather ______ our plans for an outdoor picnic.","options":["enhanced","disrupted","improved","facilitated"],"answer":1,"explanation":"A sudden change in weather is bad for plans. So disrupted fits."},
+        {"q":"His ______ demeanor often misled people about his true feelings.","options":["effervescent","stoic","jubilant","erratic"],"answer":1,"explanation":"Stoic means showing no emotion, which hides true feelings."},
+        {"q":"The ______ of the novel left readers intrigued till the very end.","options":["conclusion","plot","denouement","climax"],"answer":2,"explanation":"Denouement means the final resolution of a plot."},
+        {"q":"The ______ of the company's success was attributed to its innovative strategies.","options":["genesis","apex","zenith","inception"],"answer":0,"explanation":"Genesis means origin or beginning."},
+        {"q":"She displayed ______ skills in resolving the conflict.","options":["meticulous","chaotic","careless","hasty"],"answer":0,"explanation":"Meticulous means very careful and precise."},
+        {"q":"Despite facing numerous obstacles, he remained ______ in pursuing his goals.","options":["tenacious","complacent","apathetic","ambivalent"],"answer":0,"explanation":"Tenacious means persistent."},
+        {"q":"The ______ of the fire was yet to be determined by the investigators.","options":["consequence","effect","cause","aftermath"],"answer":2,"explanation":"Investigators determine the cause."},
+        {"q":"His ______ performance in the play earned him critical acclaim.","options":["mediocre","exceptional","subpar","adequate"],"answer":1,"explanation":"Critical acclaim means praise. So exceptional fits."},
+        {"q":"The sudden ______ of the storm forced us to seek shelter.","options":["onset","cessation","commencement","culmination"],"answer":0,"explanation":"Onset means the beginning of something unpleasant."},
+        {"q":"Her ______ knowledge of the subject impressed the panel.","options":["rudimentary","profound","superficial","trivial"],"answer":1,"explanation":"Profound means deep. Only deep knowledge would impress the panel."},
+        {"q":"The ______ of the building was awe-inspiring.","options":["interior","exterior","facade","structure"],"answer":2,"explanation":"Facade means the front face of a building."},
+        {"q":"Despite his ______ efforts, he couldn't meet the deadline.","options":["diligent","sporadic","negligent","haphazard"],"answer":0,"explanation":"Despite plus couldn't means he tried hard. So diligent fits."},
+        {"q":"The ______ of the pandemic led to widespread panic.","options":["onset","aftermath","resurgence","subsidence"],"answer":0,"explanation":"Onset means beginning."},
+        {"q":"His ______ behavior alienated his colleagues.","options":["congenial","antagonistic","amiable","affable"],"answer":1,"explanation":"Antagonistic means hostile. Alienated means pushed away."},
+        {"q":"The ______ of the party was evident from the colorful decorations.","options":["fervor","somberness","ambiance","jubilation"],"answer":2,"explanation":"Ambiance means the atmosphere or mood of a place."},
+        {"q":"The ______ of the issue required immediate attention.","options":["resolution","dissolution","escalation","exacerbation"],"answer":2,"explanation":"Escalation means worsening, which needs immediate attention."},
+        {"q":"The ______ of the project was marred by logistical challenges.","options":["initiation","completion","commencement","culmination"],"answer":1,"explanation":"Marred means spoiled. The completion was spoiled by challenges."},
+        {"q":"Despite her ______ demeanor, she was deeply passionate about her work.","options":["aloof","vivacious","indifferent","reticent"],"answer":0,"explanation":"Aloof means distant, which contrasts with deeply passionate."},
+        {"q":"The ______ of the problem lies in its complexity.","options":["solution","resolution","essence","inception"],"answer":2,"explanation":"Essence means the core nature."},
+        {"q":"His ______ efforts to improve his skills paid off in the long run.","options":["sporadic","concerted","erratic","lethargic"],"answer":1,"explanation":"Concerted means determined and joint effort."},
+        {"q":"The ______ of the new policy was met with resistance from the employees.","options":["inception","implementation","culmination","commencement"],"answer":1,"explanation":"Implementation means putting into effect."},
+        {"q":"The ______ of the disease posed a significant threat to public health.","options":["onset","cessation","culmination","aftermath"],"answer":0,"explanation":"Onset means beginning."},
+        {"q":"The ______ of the play captivated the audience from start to finish.","options":["denouement","climax","exposition","resolution"],"answer":2,"explanation":"Exposition means the introductory part that sets up the play."},
+        {"q":"Despite the ______ weather, they decided to proceed with the outdoor event.","options":["inclement","favorable","tumultuous","unpredictable"],"answer":0,"explanation":"Inclement means stormy or bad weather. Despite signals bad weather."}
+      ]
+    },
+    {
+      "id": "sentence-correction",
+      "title": "Sentence Correction",
+      "icon": "🛠️",
+      "description": "A sentence has an underlined part. Choose the best replacement. Check tense, subject-verb, pronoun, preposition, article, parallelism, comparatives and conditionals.",
+      "rules": [
+        "Check tense consistency. If the sentence uses past tense in one part, the other part usually uses past too. For example, \"He said that he was busy.\"",
+        "Check subject-verb agreement. For example, in \"Each of the boys was present\", the word each is singular, so was is correct.",
+        "Check pronoun agreement. For example, in \"Everyone must do their duty\", the word everyone is singular, so formal writing prefers his duty or his or her duty.",
+        "Check prepositions. For example, we say appear before the committee and not appear to the committee. We say capable of and not capable in.",
+        "Check articles. For example, \"a university\" is correct because university begins with a yu sound. \"An hour\" is correct because hour begins with a vowel sound.",
+        "Check parallelism. For example, \"She likes singing, dancing and painting\" is correct because all three are gerunds. Do not mix gerunds and infinitives.",
+        "Use comparatives correctly. Use than for comparisons and as...as for equality. For example, \"He is taller than me\" and not taller then me.",
+        "In third conditionals use if plus had plus past participle. For example, \"If he had revised, he would have passed.\" Do not say \"If he would have revised.\"",
+        "Do not use reason is because. The correct form is reason is that. For example, \"The reason he left was that he was unhappy.\""
+      ],
+      "cheatCodes": [
+        "Eliminate options with obvious errors first. Very often two options are clearly wrong, leaving only two to compare.",
+        "The longest option is often the most complete, but not always. Read all four carefully.",
+        "Trust formal grammar over colloquial speech. For example, \"Whom did you see?\" is more correct than \"Who did you see?\" in formal exams.",
+        "For reason sentences, always pick reason is that. For conditionals, always pick had revised over would have revised."
+      ],
+      "questions": [
+        {"q":"The performance of our players was rather ______ than I had expected.","options":["bad as I had expected","worse than I had expected","worse than expectation","worst than was expected"],"answer":1,"explanation":"The correct comparative is worse than."},
+        {"q":"Anyone interested in the use of computers can learn much if ______ access to a personal computer.","options":["you have","they have","he or she has","one of them have"],"answer":2,"explanation":"Anyone is singular, so he or she has is correct."},
+        {"q":"If he ______ his first draft, he would have received a better grade.","options":["would have revised","had revised","could of revised","had of revised"],"answer":1,"explanation":"The third conditional uses if plus had plus past participle."},
+        {"q":"Anu claims that cats ______.","options":["made the best pets.","could be the best pets.","are the best pets.","make of the best pets"],"answer":2,"explanation":"A general truth takes the present tense, so are is correct."},
+        {"q":"The reason why Sravanti wrote the letter was ______ she could not contact him over the phone.","options":["because","the reason that","that","since"],"answer":2,"explanation":"The correct structure is reason was that."},
+        {"q":"The government requires that these forms ______ before the end of the financial year.","options":["should be submitted","be submitted","for these forms to be submitted","these forms submission"],"answer":1,"explanation":"After require that, use the base verb. So be submitted is correct."},
+        {"q":"After the heavy rains last week, the water in the reservoir ______ another two feet.","options":["raised","risen","have risen by","rose"],"answer":3,"explanation":"Rise is intransitive, so its past tense is rose."},
+        {"q":"The drama had many scenes which were so humorous that it was hardly possible ______ a straight face.","options":["to keeping","impossible keeping","to keep","for keeping"],"answer":2,"explanation":"The correct pattern is possible to plus base verb, so to keep is correct."},
+        {"q":"If you had attended the seminar, you ______ a great deal.","options":["could benefit","would have benefited","would benefit","might benefit"],"answer":1,"explanation":"The third conditional uses would have plus past participle."},
+        {"q":"Each group ______ own ideology which it is bound to abide by.","options":["have their","has its","has their","have its"],"answer":1,"explanation":"Each group is singular, so has its is correct."},
+        {"q":"The shoulder height of the Siberian mammoth was about nine ______.","options":["foot","foots","feet","feets"],"answer":2,"explanation":"The plural of foot after a number is feet."},
+        {"q":"Police departments all over the world ______ computers to capture criminals.","options":["employs","employ","employing","is employing"],"answer":1,"explanation":"Departments is plural, so employ is correct."},
+        {"q":"The novels of John Irving depict everyday life in New Hampshire where he ______.","options":["grown up","growed up","grew up","grow up"],"answer":2,"explanation":"The past tense of grow is grew."},
+        {"q":"The Chinese, who are credited with ______ of gunpowder, also created the kite.","options":["the inventing","inventing","the invention","invention"],"answer":2,"explanation":"The correct phrase is the invention of gunpowder."},
+        {"q":"In 1978, the atoll Enewetak was declared uninhabitable because of the high levels of radiation ______ U.S. nuclear testing.","options":["resulting","resulting from","resulted","resulted from"],"answer":1,"explanation":"Resulting from means caused by."},
+        {"q":"George's personal diary and album formed ______ the places he had visited.","options":["the basis for his book about","the basis for his book regarding","the basis of his book about","the basis of his book on"],"answer":0,"explanation":"The standard collocation is basis for plus about the places."},
+        {"q":"By next month Ms. Jones ______ Mayor of Tallahassee for two years.","options":["will be","will have been","will being","could have been"],"answer":1,"explanation":"The future perfect will have been is correct."},
+        {"q":"The train will leave at 8.30 p.m. We ______ ready by 7.30 p.m. so that we can reach the station in time.","options":["were","must be","are","should have"],"answer":1,"explanation":"For a future need, must be ready is correct."},
+        {"q":"They examined both the samples very carefully but failed to detect ______.","options":["some difference in","some difference between","any difference between","any difference among"],"answer":2,"explanation":"Two samples take between. A negative sentence takes any."},
+        {"q":"India is a country with at least fifty major regional languages, ______.","options":["of whom fourteen have official recognition","fourteen that have official recognition","fourteen of which are officially recognised","among whom fourteen have official recognition"],"answer":2,"explanation":"Languages are things, so we use which and not whom."},
+        {"q":"Which sentence is CORRECT?","options":["Each of us was scheduled to take the test.","Each of us were scheduled to take the test.","Every one of us were scheduled to take the test.","Each of us are scheduled to take the test."],"answer":0,"explanation":"Each is singular, so was is correct. The other options use the wrong verb."},
+        {"q":"Which sentence is CORRECT?","options":["Mukesh is the richest of the two brothers.","You do not look well today.","She spoke quicker than he did.","I have never been more surer of anything in my life."],"answer":1,"explanation":"B is correct. A needs richer of two. C needs more quickly. D needs more sure."},
+        {"q":"Which sentence is CORRECT?","options":["She looked suspicious at the man.","She looked suspiciously at the man wearing the trench coat.","The man looked suspiciously at her.","The man looked suspicious to her."],"answer":1,"explanation":"The adverb suspiciously modifies looked. So B is correct."},
+        {"q":"Which sentence is CORRECT?","options":["You may look out the window.","Divide the candy between the two of you.","That is something with which I cannot agree.","Take your shoes off of the bed."],"answer":1,"explanation":"Between is used for two people, so B is correct."}
+      ]
+    },
+    {
+      "id": "sentence-rearrangement",
+      "title": "Sentence Rearrangement",
+      "icon": "🔀",
+      "description": "Words of a sentence are jumbled. Arrange them into a grammatically correct sentence. Find the subject, the verb, the object, the time expressions and the adverbs.",
+      "rules": [
+        "Find the subject first. The subject is the person or thing that does the action. For example, in \"I always take a shower in the morning\", the subject is I.",
+        "Find the main verb next. It tells you what the subject does. For example, in \"His best friend comes over every day\", the verb is comes.",
+        "Place the object or complement after the verb. For example, in \"She made dinner for the family\", dinner is the object.",
+        "Time expressions like in the morning, every day and last night usually go at the end or the beginning. For example, \"I take a shower in the morning.\"",
+        "Adverbs of frequency like always, usually and never go before the main verb. For example, \"I always take a shower\" and not \"I take always a shower.\"",
+        "In questions, the auxiliary comes before the subject. For example, \"Do you think getting a pet is a good idea?\" and not \"You do think...\"."
+      ],
+      "cheatCodes": [
+        "Start with the question, Who is doing the action? That gives you the subject and the first word.",
+        "Time expressions usually come at the end of the sentence. For example, \"I went shopping with my mom the other day.\"",
+        "Frequency adverbs such as always, usually and never go before the main verb. For example, \"He always eats breakfast.\"",
+        "In questions, the auxiliary comes first, then the subject, then the verb. For example, \"Do you think...\" or \"Would getting a pet be...\"."
+      ],
+      "questions": [
+        {"q":"in the morning / i always take / a shower","options":["I always take a shower in the morning.","In the morning I take a shower always.","I take always a shower in the morning.","Always I take a shower in the morning."],"answer":0,"explanation":"The frequency adverb always goes before the main verb take."},
+        {"q":"time, the less of it you / have left / the more you waste","options":["The more time you waste, the less of it you have left.","The less of it you have left, the more time you waste.","The more you waste time, the less of it you have left.","Time you waste more, less of it you have left."],"answer":0,"explanation":"The structure is the more...the less."},
+        {"q":"their opinion on it / is to ask someone else / a good idea for / solving this problem","options":["A good idea for solving this problem is to ask someone else their opinion on it.","Solving this problem is to ask someone else a good idea.","Their opinion on it is a good idea for solving this problem.","Ask someone else is a good idea for solving this problem."],"answer":0,"explanation":"The subject comes first, followed by the linking verb is and the complement."},
+        {"q":"is seeing my friends / my favorite thing / about going to school","options":["My favorite thing about going to school is seeing my friends.","Seeing my friends is my favorite thing about going to school.","Going to school about my favorite thing is seeing my friends.","My friends seeing is my favorite thing about going to school."],"answer":0,"explanation":"The subject is My favorite thing about going to school, and the verb is is."},
+        {"q":"stay home instead of / going out tonight! / of course i'd rather","options":["Of course I'd rather stay home instead of going out tonight!","Tonight of course I'd rather stay home instead of going out!","Going out tonight of course I'd rather stay home instead of!","I'd rather of course stay home instead of going out tonight!"],"answer":0,"explanation":"Of course comes first, then I'd rather, then the verb phrase."},
+        {"q":"do you think / be a good idea? / getting a pet would","options":["Do you think getting a pet would be a good idea?","Getting a pet would do you think be a good idea?","Would getting a pet do you think be a good idea?","A good idea do you think getting a pet would be?"],"answer":0,"explanation":"In a question, the auxiliary do comes first, then you think, then the clause."},
+        {"q":"you look / wrong / like something's","options":["You look like something's wrong.","Like something's wrong you look.","Something's wrong you look like.","You like look something's wrong."],"answer":0,"explanation":"Subject plus look plus like plus clause."},
+        {"q":"every day he / wants to eat for his / next meal / thinks about what he","options":["Every day he thinks about what he wants to eat for his next meal.","He every day thinks about what he wants to eat.","Every day he wants to eat what he thinks about.","He thinks every day about what he wants to eat."],"answer":0,"explanation":"Time plus subject plus verb plus clause."},
+        {"q":"if she would / then everything would / be perfect / talk to me again","options":["If she would talk to me again, then everything would be perfect.","Then everything would be perfect if she would talk to me again.","She would talk to me again if everything would be perfect.","Would be perfect if she talk to me again."],"answer":0,"explanation":"The conditional structure is if plus clause, then plus clause."},
+        {"q":"i wish that / canceled / school could be","options":["I wish that school could be canceled.","I wish school that could be canceled.","That I wish school could be canceled.","Could be canceled that I wish school."],"answer":0,"explanation":"The structure is I wish plus that plus clause."},
+        {"q":"i'd say my favorite part / everything starts to turn / out well at last / in this book is when","options":["I'd say my favorite part in this book is when everything starts to turn out well at last.","My favorite part I'd say is when everything starts to turn out well.","I'd say in this book my favorite part is when everything starts to turn out well at last.","When everything starts to turn out well at last I'd say my favorite part."],"answer":0,"explanation":"The subject comes first, followed by is and the when-clause."},
+        {"q":"his best / over every day / friend comes","options":["His best friend comes over every day.","Every day his best friend comes over.","Friend his best comes over every day.","Over every day his best friend comes."],"answer":0,"explanation":"Subject plus verb plus adverb of place plus time."},
+        {"q":"in about an / dinner will be ready / for us all to enjoy / together / hour or so","options":["Dinner will be ready in about an hour or so for us all to enjoy together.","In about an hour or so dinner will be ready for us to enjoy.","Dinner will be ready for us all to enjoy in about an hour or so together.","Ready dinner will be in about an hour for us all to enjoy together."],"answer":0,"explanation":"Subject plus verb plus time phrase plus purpose."},
+        {"q":"when he finally / very dark outside already / got home from work it was","options":["When he finally got home from work, it was already very dark outside.","It was already very dark outside when he finally got home from work.","When finally he got home it was very dark outside already.","Very dark outside it was already when he finally got home from work."],"answer":0,"explanation":"When-clause comes first, then the main clause."},
+        {"q":"she's been / but has not told / anyone yet / feeling sick lately","options":["She's been feeling sick lately but has not told anyone yet.","But she's been feeling sick lately has not told anyone yet.","She's been sick lately feeling but has not told anyone.","Feeling sick she's been lately but not told anyone yet."],"answer":0,"explanation":"The main clause comes first, then but plus the second clause."},
+        {"q":"excitedly she / and gave him / a big hug / ran up to him","options":["Excitedly she ran up to him and gave him a big hug.","She excitedly ran up to him and gave him a big hug.","She ran up excitedly to him and gave a big hug.","Ran she excitedly up to him and gave him a big hug."],"answer":0,"explanation":"The adverb excitedly comes first, then the subject and verb."},
+        {"q":"i hope that / come back home / very soon she'll","options":["I hope that she'll come back home very soon.","She'll I hope that come back home very soon.","Very soon I hope that she'll come back home.","That she'll come back home very soon I hope."],"answer":0,"explanation":"The structure is I hope plus that plus clause."},
+        {"q":"she made dinner / night / for the family last","options":["She made dinner for the family last night.","Last night she made dinner for the family.","She last night made dinner for the family.","For the family she made dinner last night."],"answer":0,"explanation":"Subject plus verb plus object plus time."},
+        {"q":"the other day / my mom to buy some / new clothes for myself / i went shopping with","options":["The other day I went shopping with my mom to buy some new clothes for myself.","I went shopping with my mom the other day to buy some new clothes for myself.","My mom the other day I went shopping with to buy new clothes.","To buy new clothes I went shopping with my mom the other day."],"answer":0,"explanation":"Time phrase comes first, then subject, verb and purpose."},
+        {"q":"if only he would have / happened then i wouldn't / feelings / told me sooner what / be having these","options":["If only he would have told me sooner what happened, then I wouldn't be having these feelings.","If only he told me sooner what happened, then I wouldn't be having these feelings.","I wouldn't be having these feelings if only he would have told me sooner.","These feelings I wouldn't be having if he told me sooner what happened."],"answer":0,"explanation":"The conditional is if only plus past perfect, then plus would plus verb."},
+        {"q":"my friends are / tonight / going to a","options":["My friends are going to a party tonight.","Tonight my friends are going to a party.","Going to a party tonight my friends are.","My friends tonight are going to a party."],"answer":0,"explanation":"Subject plus verb plus object plus time."},
+        {"q":"he first learned / piano / how to play the","options":["He first learned how to play the piano.","He first learned the piano how to play.","The piano he first learned how to play.","How to play the piano he first learned."],"answer":0,"explanation":"Subject plus verb plus infinitive clause."},
+        {"q":"it's been two / moved away / years now since she","options":["It's been two years now since she moved away.","Since she moved away it's been two years now.","Two years it's been now since she moved away.","Moved away it's been two years since she."],"answer":0,"explanation":"The structure is It's been plus time plus since plus clause."},
+        {"q":"she asked me / birthday this year / what i wanted for my","options":["She asked me what I wanted for my birthday this year.","What I wanted for my birthday this year she asked me.","For my birthday she asked me what I wanted this year.","She asked what I wanted me for my birthday this year."],"answer":0,"explanation":"Subject plus verb plus indirect question."},
+        {"q":"maybe i'll / home today / just stay at","options":["Maybe I'll just stay at home today.","Today maybe I'll just stay at home.","Stay at home today maybe I'll just.","Just stay at home maybe I'll today."],"answer":0,"explanation":"The adverb maybe comes first, then subject and verb."}
+      ]
+    },
+    {
+      "id": "reading-comprehension",
+      "title": "Reading Comprehension",
+      "icon": "📖",
+      "description": "A passage followed by questions. Read once for the main idea, then scan for details. Beware of scope traps, extreme words such as all, never and always, and clever mismatches.",
+      "rules": [
+        "Do not read the passage first for detail questions. Scan the questions first, then scan the passage for the relevant part.",
+        "For main idea questions, identify the topic, the tone and the author's purpose. Read once and move on.",
+        "For inference questions, the answer is not directly stated but logically follows. For example, if the passage says the natives respected nature, you can infer that they valued the environment.",
+        "For vocabulary questions, use context and not the dictionary meaning. For example, sanitised in sanitised barbarism means made to seem clean or acceptable, not physically clean.",
+        "For fact questions, the answer is directly in the passage. Look for exact words or their synonyms.",
+        "Beware of extreme words in options such as all, never, always and only. They are usually wrong. For example, if the passage says virtual elimination, an option saying total elimination is wrong.",
+        "Beware of the scope trap, which means options that are too broad or too narrow. Stick to what the passage says.",
+        "For except questions, three options are true and one is false. Find the false one."
+      ],
+      "cheatCodes": [
+        "The first sentence of a paragraph usually tells you what the paragraph is about. Read it carefully.",
+        "For tone questions, look at the adjectives the author uses. Words like shocking, unfortunately and ironically signal criticism.",
+        "For inference, eliminate options that cannot be true from the passage, then pick the safest one.",
+        "Which cannot be inferred means find the option that goes beyond the passage or contradicts it. For example, if the passage says some, the option saying all is the answer."
+      ],
+      "questions": [
+        {"q":"PASSAGE: On August 3, 1492, Christopher Columbus set sail from Palos, Spain, with less than a hundred crew members to discover a new route to Asia. After spending a difficult time at sea, the party sighted land early on the morning of October 12, 1492. They set foot on an island in the Bahamas which they named Al Salvador. Columbus presumed that the indigenous people were Native Indians as he was under the mistaken belief that he had set foot on Indian soil. Probably some 10 million American Indians were natives to the land before the large-scale inhabitation by Europeans and subsequent annihilation of Native Americans started. However, it took more than a hundred years after Columbus discovered America for the Europeans to finally take the momentous decision to make the New World their home. The Native Americans actually welcomed the pale-skinned visitors primarily out of curiosity. They were fascinated by the steel knives and swords, fire spewing cannons, brass and copper utensils. Eventually, cultural differences erupted. The natives could not stomach the arrogance of the newcomers and the scant respect they paid to nature. The European settlers viewed every resource, plants, animals and people, as something to be commercially exploited. The native Indians were vastly outnumbered in the wars that ensued. The resistance they put up never proved enough. The nomadic lifestyle of the Indians, the relatively unsophisticated weapons at their disposal, the unwillingness of some of their own people to defend themselves, and the diseases of the white men all contributed to the virtual elimination of their race. Some of the diseases brought by Europeans that decimated the natives were small pox, plague, measles, cholera, typhoid and malaria. These deadly diseases, to which most natives had developed no resistance, devastated many tribes between 1775 and 1850. America was named after an Italian navigator, Amerigo Vespucci. QUESTION: The primary purpose of the passage is to:","options":["Disprove the notion that America was named after Columbus","Provide a snapshot of the discovery of America and the early years of settlements","Explain how the Europeans eliminated the Native Americans in their own land","Discuss how the process of colonization of America started"],"answer":1,"explanation":"The passage covers discovery, early settlements and native relations, so a snapshot is the best summary."},
+        {"q":"From the passage we can infer that in comparison to the Europeans, Native Americans were:","options":["Careless about their environment","A very unhealthy lot","More respectful of nature","Ignorant about sanitation"],"answer":2,"explanation":"The passage says Europeans had scant respect for nature, so the natives respected nature more."},
+        {"q":"What can be inferred from the third paragraph?","options":["The native Americans did not have any weapons with which to defend themselves.","The native Americans probably attached a lot of importance to and respected nature.","The native Americans did not know how to use natural resources.","The early settlers became arrogant as they could commercially exploit resources."],"answer":1,"explanation":"Europeans were criticized for scant respect to nature, so natives valued nature."},
+        {"q":"Based on the passage, which of the following CANNOT be inferred? I. Alien diseases wiped out a large proportion of certain Native American tribes II. The early settlers totally eliminated the Native Americans III. To the early settlers, even people were resources to be exploited commercially","options":["Only I","Only III","I & III","Only II"],"answer":3,"explanation":"II is too extreme. The passage says virtual elimination, not total elimination."},
+        {"q":"PASSAGE: It is believed that Shakespeare wrote The Merchant of Venice between 1596 and 1598. The classification of this play as a comedy could stupefy many modern day youngsters who are used to a somewhat different meaning. But during Shakespeare's times, a comedy was as poignant and melodramatic as a tragedy with separation, struggle and heightened tensions being the central theme. However, the ending was always a happy one. Many people feel more comfortable with the term problem plays or tragicomedies than comedies. This play tends to stir up a hornet's nest whenever it is discussed or staged. As The Merchant of Venice can be viewed from different perspectives, it evokes several reactions including extreme sympathy for the villain, the Jewish moneylender Shylock, and anger against the hero, his friend Bassanio, and Bassanio's wife, Portia. Shakespeare has been accused of anti-Semitism because of the contemptuous utterances of his hero who even calls the villain a cur. Critics of this play overlook the possibility that Shakespeare was just commenting upon the social situation prevailing during his time. A dispassionate analysis will reveal the superb portrayal of the deep anguish experienced by the marginalized sections of society. Sample these lines of Shylock: Hath not a Jew eyes? Hath not a Jew hands, organs, dimensions, senses, affections, passions...If you prick us, do we not bleed? These powerful words put by Shakespeare into the mouth of a man portrayed as a villain would not be so potent if this master dramatist had no deep-felt empathy for a character, who probably was more wronged than he wronged others. QUESTION: From the passage, we can infer that the author is:","options":["Of the opinion that Shakespeare had no deep-felt empathy for any of his characters","Uncomfortable with the notion of heroes possessing negative traits","Uncomfortable with the term comedy being used for plays like The Merchant of Venice","Supporting the critics who feel that the hero is not a likeable character"],"answer":2,"explanation":"The passage says these sentences explain the discomfort of we modernists when such dramas are called comedies."},
+        {"q":"PASSAGE: The need for knowledge of the constitution and functions of human nature is great because the teacher's attitude to subject matter is different from the pupil's. The teacher presents in actuality what the pupil represents only in posse. That is, the teacher already knows the things which the student is only learning. Hence the problem of the two is radically unlike. When engaged in the direct act of teaching, the instructor needs to have subject matter at his fingers' ends; his attention should be upon the attitude and response of the pupil. To understand the latter in its interplay with subject matter is his task, while the pupil's mind, naturally, should be not on itself but on the topic in hand. Or to state the same point in a somewhat different manner: the teacher should be occupied not with subject matter in itself but in its interaction with the pupils' present needs and capacities. Hence simple scholarship is not enough. QUESTION: It can be inferred that:","options":["Simple scholarship is lop-sided in its focus","Simple scholarship might overlook the subject matter","Simple scholarship, with a narrow focus, might not place enough emphasis on the student's needs","Simple scholarship will always be lopsided in nature"],"answer":2,"explanation":"The passage says the teacher should focus on students' needs, so narrow scholarship misses student needs."},
+        {"q":"PASSAGE: A being whose activities are associated with others has a social environment. What he does and what he can do depend upon the expectations, demands, approvals and condemnations of others. A being connected with other beings cannot perform his own activities without taking the activities of others into account. For they are the indispensable conditions of the realization of his tendencies. We might as well try to imagine a business man doing business all by himself, as to conceive it possible to define the activities of an individual in terms of his isolated actions. Thinking and feeling that have to do with action in association with others is as much a social mode of behavior as is the most overt cooperative or hostile act. QUESTION: It can be inferred that:","options":["In our social world, one's thinking, feelings and actions cannot stand in isolation to actions of others","In our social world, thinking, feelings and actions of an individual are driven by motivations of others","In our social world, thinking, feelings and actions of a person cannot stand in isolation to those of others","In our social world, thinking, feelings and actions of a single person are juxtaposed retrospectively to those of others"],"answer":2,"explanation":"The passage says we cannot act in isolation and that thinking and feeling are also social modes."},
+        {"q":"PASSAGE: An increase in the level of serotonin in the human body is known to significantly enhance the mood of the person and in some cases, help people overcome depression. Serotonin taken orally does not pass into the pathways of the central nervous system because it does not cross the blood-brain barrier. However, tryptophan and its metabolite 5-hydroxytryptophan, from which serotonin is synthesized, do cross the blood-brain barrier. These agents are available as dietary supplements and may be effective serotonergic agents. QUESTION: Which of the following can be correctly inferred?","options":["Individuals who do not consume enough tryptophan can develop depressive tendencies","Individuals who consume tryptophan can metabolize enough serotonin and do not run the risk of depression","Consumption of serotonin-laced foods can help cure depression in some cases","Tryptophan is an effective agent that can help cure depression in some cases"],"answer":3,"explanation":"The passage says tryptophan crosses the blood-brain barrier and may be effective, so D is the safest inference."},
+        {"q":"PASSAGE: An increase in the median income of the middle class does not cause average levels of education for the middle class to go up. If they did, then countries with the highest median income of the middle class would also have the highest levels of education for this class. In fact, when the median income of the middle class is made suitably comparable for different countries, accounting for inflation, currency fluctuations and purchasing power parity, there is no such correlation. QUESTION: Which can be correctly inferred?","options":["Countries with the highest median income of the middle class do not have the highest levels of education for the middle class","It is difficult to reliably compare the education and income levels of one country with another","A reduction in the median income of the middle class of the country will not necessarily lower the average level of education for the said class","Countries with low levels of education for the middle class have comparatively higher levels of median income"],"answer":0,"explanation":"The passage directly states that there is no correlation between highest median income and highest education."},
+        {"q":"PASSAGE: Political education may be defined as the preparation of a citizen to take well informed, responsible and sustained action for participation in the national struggle in order to achieve the socio-economic objectives of the country. The predominant socio-economic objectives in India are the abolition of poverty and the creation of a modern democratic, secular and socialist society in place of the present traditional, feudal, hierarchical and inegalitarian one. Under colonial rule, Congress leaders argued that political education was important. But when they came to power in 1947 they almost adopted the British policy. The wise academicians wanted political support without political interference. What we have actually received is infinite political interference with little genuine political support. This interference with the educational system by political parties for their own ulterior motives is no political education at all. QUESTION: What should be the main purpose of political education?","options":["To bring qualitative change in the entire education system","To create an egalitarian society","To prepare the young generation with high intellectual acumen","To champion the cause of elitism"],"answer":1,"explanation":"The passage says the objective is to replace the present inegalitarian society, so the goal is an egalitarian society."},
+        {"q":"PASSAGE continued: How has politics been related to educational institutions after independence?","options":["They got almost no political support as well as political interference","They got political support at the cost of political interference","There was substantial interference without political support","Politics and education remained completely separate"],"answer":2,"explanation":"The passage says there was infinite political interference with little genuine political support."},
+        {"q":"PASSAGE continued: Which is the major drawback of the present education system?","options":["The education system mainly represents the oppressed sections of the society","The present education system promotes the domination of the privileged few","It is based on the British model of education","It does not teach patriotism"],"answer":1,"explanation":"The passage says the education system has become even more elite-oriented."},
+        {"q":"PASSAGE continued: Which word is most opposite in meaning to hamper as used in the passage?","options":["Accelerate","Envision","Foster","Initiate"],"answer":0,"explanation":"Hamper means to slow down or hinder. The opposite is accelerate."}
+      ]
+    }
+  ]
+};
+
+const STORAGE_KEY = "verbalCram.progress.v1";
+
+let DATA = null;
+let progress = loadProgress(); // { "sectionId:index": true/false }
+let currentSection = null;
+
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch { return {}; }
+}
+function saveProgress() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+function key(sid, i) { return sid + ":" + i; }
+
+async function init() {
+  try {
+    const res = await fetch("data.json");
+    if (!res.ok) throw new Error("no data.json");
+    DATA = await res.json();
+  } catch (e) {
+    DATA = FALLBACK;
+  }
+  buildNav();
+  showSection(DATA.sections[0].id);
+  updateProgressBar();
+}
+
+function buildNav() {
+  const nav = document.getElementById("nav");
+  nav.innerHTML = "";
+  DATA.sections.forEach(s => {
+    const b = document.createElement("button");
+    b.textContent = (s.icon || "") + " " + s.title;
+    b.dataset.id = s.id;
+    b.onclick = () => showSection(s.id);
+    nav.appendChild(b);
+  });
+}
+
+function showSection(id) {
+  currentSection = id;
+  document.querySelectorAll("#nav button").forEach(b => {
+    b.classList.toggle("active", b.dataset.id === id);
+  });
+  const s = DATA.sections.find(x => x.id === id);
+  const main = document.getElementById("main");
+  main.innerHTML = "";
+
+  const h = document.createElement("h2");
+  h.className = "section-title";
+  h.textContent = (s.icon || "") + " " + s.title;
+  main.appendChild(h);
+
+  const p = document.createElement("p");
+  p.className = "section-desc";
+  p.textContent = s.description || "";
+  main.appendChild(p);
+
+  if (s.rules && s.rules.length) {
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>Rules</h3><ul>" + s.rules.map(r => "<li>" + esc(r) + "</li>").join("") + "</ul>";
+    main.appendChild(c);
+  }
+  if (s.cheatCodes && s.cheatCodes.length) {
+    const c = document.createElement("div");
+    c.className = "card";
+    c.innerHTML = "<h3>Cheat Codes</h3><ul>" + s.cheatCodes.map(r => "<li>" + esc(r) + "</li>").join("") + "</ul>";
+    main.appendChild(c);
+  }
+
+  const qHeader = document.createElement("h3");
+  qHeader.style.marginTop = "22px";
+  qHeader.textContent = "Practice (" + s.questions.length + " questions)";
+  main.appendChild(qHeader);
+
+  s.questions.forEach((q, i) => main.appendChild(renderQuestion(s, q, i)));
+}
+
+function renderQuestion(section, q, idx) {
+  const k = key(section.id, idx);
+  const state = progress[k]; // true=correct, false=wrong, undefined=unanswered
+  const wrap = document.createElement("div");
+  wrap.className = "q";
+
+  const qt = document.createElement("div");
+  qt.className = "q-text";
+  qt.innerHTML = esc(q.q) + ` <span class="badge ${state===true?'done':state===false?'wrong-done':''}">${state===true?'✓ done':state===false?'✗ wrong':'?'}</span>`;
+  wrap.appendChild(qt);
+
+  const expl = document.createElement("div");
+  expl.className = "explanation";
+  expl.textContent = "Why: " + q.explanation;
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.textContent = String.fromCharCode(65 + oi) + ". " + opt;
+    btn.onclick = () => {
+      // Mark all options disabled
+      wrap.querySelectorAll(".option").forEach(b => b.disabled = true);
+      if (oi === q.answer) {
+        btn.classList.add("correct");
+        progress[k] = true;
+      } else {
+        btn.classList.add("wrong");
+        // highlight correct one
+        const correctBtn = wrap.querySelectorAll(".option")[q.answer];
+        correctBtn.classList.add("correct");
+        // only record wrong if not already correct
+        if (progress[k] !== true) progress[k] = false;
+      }
+      saveProgress();
+      updateProgressBar();
+      // update badge
+      const badge = qt.querySelector(".badge");
+      badge.className = "badge " + (progress[k] === true ? "done" : "wrong-done");
+      badge.textContent = progress[k] === true ? "✓ done" : "✗ wrong";
+      expl.classList.add("show");
+    };
+    wrap.appendChild(btn);
+  });
+
+  // If already answered before, prefill
+  if (state !== undefined) {
+    const opts = wrap.querySelectorAll(".option");
+    opts.forEach(b => b.disabled = true);
+    opts[q.answer].classList.add("correct");
+    if (state === false) {
+      // We don't know which wrong one was picked; just show the correct one.
+    }
+    expl.classList.add("show");
+  }
+
+  wrap.appendChild(expl);
+  return wrap;
+}
+
+function updateProgressBar() {
+  let total = 0, correct = 0;
+  DATA.sections.forEach(s => {
+    s.questions.forEach((_, i) => {
+      total++;
+      if (progress[key(s.id, i)] === true) correct++;
+    });
+  });
+  const pct = total ? Math.round((correct / total) * 100) : 0;
+  document.getElementById("bar").style.width = pct + "%";
+  document.getElementById("progressText").textContent = correct + " / " + total + " correct (" + pct + "%)";
+}
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+document.getElementById("resetBtn").onclick = () => {
+  if (confirm("Reset all progress?")) {
+    progress = {};
+    saveProgress();
+    showSection(currentSection);
+    updateProgressBar();
+  }
+};
+
+init();
+</script>
+
+</body>
+</html>
